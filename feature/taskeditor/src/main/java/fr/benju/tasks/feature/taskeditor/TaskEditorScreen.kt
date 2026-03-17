@@ -19,11 +19,8 @@ fun TaskEditorScreen(
     modifier: Modifier = Modifier,
     viewModel: TaskEditorViewModel = hiltViewModel()
 ) {
-    val viewState by viewModel.viewState.collectAsState()
-
-    var taskTitle by remember { mutableStateOf("") }
-    var taskDescription by remember { mutableStateOf("") }
-    var selectedPriority by remember { mutableStateOf(Priority.MEDIUM) }
+    val viewState by viewModel.viewState.collectAsStateWithLifecycle()
+    val currentOnTaskSaved by rememberUpdatedState(onTaskSaved)
 
     LaunchedEffect(taskId) {
         if (taskId != null) {
@@ -31,17 +28,9 @@ fun TaskEditorScreen(
         }
     }
 
-    LaunchedEffect(viewState.taskId) {
-        if (viewState.taskId != null) {
-            taskTitle = viewState.title
-            taskDescription = viewState.description
-            selectedPriority = viewState.priority
-        }
-    }
-
-    LaunchedEffect(Unit) {
+    LaunchedEffect(viewModel) {
         viewModel.saveSuccess.collect {
-            onTaskSaved()
+            currentOnTaskSaved()
         }
     }
 
@@ -56,12 +45,7 @@ fun TaskEditorScreen(
                 },
                 actions = {
                     TextButton(
-                        onClick = {
-                            viewModel.updateTitle(taskTitle)
-                            viewModel.updateDescription(taskDescription)
-                            viewModel.updatePriority(selectedPriority)
-                            viewModel.saveTask()
-                        },
+                        onClick = { viewModel.saveTask() },
                         enabled = !viewState.isSaving
                     ) {
                         Text("Save")
@@ -78,16 +62,16 @@ fun TaskEditorScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             OutlinedTextField(
-                value = taskTitle,
-                onValueChange = { taskTitle = it },
+                value = viewState.title,
+                onValueChange = { viewModel.updateTitle(it) },
                 label = { Text("Title") },
-                modifier = Modifier.wrapContentWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
 
             OutlinedTextField(
-                value = taskDescription,
-                onValueChange = { taskDescription = it },
+                value = viewState.description,
+                onValueChange = { viewModel.updateDescription(it) },
                 label = { Text("Description") },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 3,
@@ -102,8 +86,8 @@ fun TaskEditorScreen(
             ) {
                 Priority.entries.forEach { priority ->
                     FilterChip(
-                        selected = selectedPriority == priority,
-                        onClick = { selectedPriority = priority },
+                        selected = viewState.priority == priority,
+                        onClick = { viewModel.updatePriority(priority) },
                         label = { Text(priority.name) }
                     )
                 }

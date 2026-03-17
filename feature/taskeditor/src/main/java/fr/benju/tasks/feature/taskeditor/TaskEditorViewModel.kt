@@ -9,7 +9,6 @@ import fr.benju.tasks.domain.usecase.AddTaskUseCase
 import fr.benju.tasks.domain.usecase.GetTaskByIdUseCase
 import fr.benju.tasks.domain.usecase.UpdateTaskUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -31,16 +30,8 @@ class TaskEditorViewModel @Inject constructor(
     private val _saveSuccess = MutableSharedFlow<Unit>()
     val saveSuccess: SharedFlow<Unit> = _saveSuccess
 
-    private var observeJob: Job? = null
-
-    fun observeTaskUpdates() {
-        observeJob = viewModelScope.launch {
-            // Simulating some background observation
-        }
-    }
-
     fun loadTask(taskId: Long) {
-        viewModelScope.launch(dispatchers.main) {
+        viewModelScope.launch(dispatchers.io) {
             val task = getTaskByIdUseCase(taskId) ?: return@launch
             _viewState.value = _viewState.value.copy(
                 taskId = task.id,

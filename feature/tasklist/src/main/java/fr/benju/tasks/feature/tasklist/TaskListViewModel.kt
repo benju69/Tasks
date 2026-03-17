@@ -58,13 +58,17 @@ class TaskListViewModel @Inject constructor(
 
     fun onTaskToggled(taskId: Long) {
         viewModelScope.launch {
-            toggleTaskStatusUseCase(taskId)
+            toggleTaskStatusUseCase(taskId).onFailure { error ->
+                _viewState.value = _viewState.value.copy(error = error.message)
+            }
         }
     }
 
     fun onDeleteTask(taskId: Long) {
         viewModelScope.launch {
-            deleteTaskUseCase(taskId)
+            deleteTaskUseCase(taskId).onFailure { error ->
+                _viewState.value = _viewState.value.copy(error = error.message)
+            }
         }
     }
 

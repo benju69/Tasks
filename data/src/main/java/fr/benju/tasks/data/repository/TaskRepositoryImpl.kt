@@ -13,24 +13,19 @@ class TaskRepositoryImpl @Inject constructor(
     private val taskMapper: TaskMapper,
 ) : TaskRepository {
 
-    private val cache = mutableListOf<Task>()
+    @Volatile
+    private var cache: Map<Long, Task> = emptyMap()
 
     override fun getTasks(): Flow<List<Task>> {
         return taskDao.getAllTasks().map { entities ->
             val tasks = entities.map { taskMapper.toDomain(it) }
-            cache.clear()
-            cache.addAll(tasks)
+            cache = tasks.associateBy { it.id }
             tasks
         }
     }
 
     override suspend fun getTaskById(id: Long): Task? {
-        val cachedTask = cache.find { it.id == id }
-        if (cachedTask != null) {
-            return cachedTask
-        }
-
-        return taskDao.getTaskById(id)?.let { taskMapper.toDomain(it) }
+        return cache[id] ?: taskDao.getTaskById(id)?.let { taskMapper.toDomain(it) }
     }
 
     override suspend fun addTask(task: Task): Result<Long> {
