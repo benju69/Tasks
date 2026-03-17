@@ -111,7 +111,8 @@ fun TaskListScreen(
                         TaskCard(
                             task = task,
                             onTaskClick = { id -> onTaskClick(id) },
-                            onToggleComplete = { id -> viewModel.onTaskToggled(id) }
+                            onToggleComplete = { id -> viewModel.onTaskToggled(id) },
+                            onDeleteTask = { id -> viewModel.onDeleteTask(id) }
                         )
                     }
                 }

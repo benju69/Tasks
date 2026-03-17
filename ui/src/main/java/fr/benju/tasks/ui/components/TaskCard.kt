@@ -9,24 +9,30 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import fr.benju.tasks.domain.model.Task
+import fr.benju.tasks.ui.R
 
 @Composable
 fun TaskCard(
     task: Task,
     onTaskClick: (Long) -> Unit,
     onToggleComplete: (Long) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onDeleteTask: ((Long) -> Unit)? = null,
 ) {
     Card(
         modifier = modifier
@@ -36,6 +42,7 @@ fun TaskCard(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(16.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
                 checked = task.isCompleted,
@@ -45,7 +52,7 @@ fun TaskCard(
             Spacer(modifier = Modifier.width(12.dp))
 
             Column(
-                modifier = Modifier.wrapContentSize(),
+                modifier = Modifier.weight(1f),
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
                 Text(
@@ -66,6 +73,16 @@ fun TaskCard(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 PriorityChip(priority = task.priority)
+            }
+
+            if (onDeleteTask != null) {
+                IconButton(onClick = { onDeleteTask(task.id) }) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_delete_rounded_24dp),
+                        contentDescription = "Delete task",
+                        tint = Color.Red.copy(alpha = 0.7f),
+                    )
+                }
             }
         }
     }
