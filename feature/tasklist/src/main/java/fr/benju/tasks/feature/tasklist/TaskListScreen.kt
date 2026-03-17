@@ -92,7 +92,7 @@ fun TaskListScreen(
                     contentPadding = PaddingValues(16.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    items(viewState.tasks) { task ->
+                    items(viewState.tasks, key = { task -> task.id }) { task ->
                         TaskCard(
                             task = task,
                             onTaskClick = { id -> onTaskClick(id) },
