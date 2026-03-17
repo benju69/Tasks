@@ -91,6 +91,9 @@ dependencies {
     // Room
     implementation(libs.room.runtime)
 
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+
     // Coroutines
     implementation(libs.kotlinx.coroutines.android)
 

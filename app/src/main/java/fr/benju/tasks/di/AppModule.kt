@@ -1,7 +1,9 @@
 package fr.benju.tasks.di
 
 import fr.benju.tasks.data.repository.TaskRepositoryImpl
+import fr.benju.tasks.data.repository.UserPreferencesRepositoryImpl
 import fr.benju.tasks.domain.repository.TaskRepository
+import fr.benju.tasks.domain.repository.UserPreferencesRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -17,4 +19,10 @@ abstract class AppModule {
     abstract fun bindTaskRepository(
         impl: TaskRepositoryImpl
     ): TaskRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindUserPreferencesRepository(
+        impl: UserPreferencesRepositoryImpl
+    ): UserPreferencesRepository
 }
