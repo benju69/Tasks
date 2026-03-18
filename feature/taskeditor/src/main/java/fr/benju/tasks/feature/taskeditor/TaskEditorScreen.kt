@@ -13,10 +13,10 @@ import fr.benju.tasks.domain.model.Priority
 
 @Composable
 fun TaskEditorScreen(
+    modifier: Modifier = Modifier,
     onTaskSaved: () -> Unit,
     onDismiss: () -> Unit,
     taskId: Long? = null,
-    modifier: Modifier = Modifier,
     viewModel: TaskEditorViewModel = hiltViewModel()
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
@@ -36,7 +36,7 @@ fun TaskEditorScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            CenterAlignedTopAppBar(
                 title = { Text(if (taskId != null) "Edit Task" else "New Task") },
                 navigationIcon = {
                     TextButton(onClick = onDismiss) {

@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.benju.tasks.domain.model.Task
 import fr.benju.tasks.ui.R
@@ -77,7 +78,7 @@ fun TaskCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(16.dp),
+            modifier = Modifier.fillMaxWidth().padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
@@ -122,4 +123,21 @@ fun TaskCard(
             }
         }
     }
+}
+
+@Preview
+@Composable
+private fun TaskCardPreview() {
+    TaskCard(
+        task = Task(
+            id = 1L,
+            title = "Buy groceries",
+            description = "Milk, eggs, bread, and cheese",
+            isCompleted = false,
+            priority = fr.benju.tasks.domain.model.Priority.HIGH
+        ),
+        onTaskClick = {},
+        onToggleComplete = {},
+        onDeleteTask = {}
+    )
 }

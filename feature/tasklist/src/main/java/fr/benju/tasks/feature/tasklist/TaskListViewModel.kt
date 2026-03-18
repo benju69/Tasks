@@ -50,12 +50,6 @@ class TaskListViewModel @Inject constructor(
         _filter.value = filter
     }
 
-    fun loadTasks() {
-        // Plus nécessaire : le flux réactif gère le rechargement automatiquement.
-        // Conservé pour compatibilité avec les appels existants (ex: LaunchedEffect).
-        _filter.value = _filter.value
-    }
-
     fun onTaskToggled(taskId: Long) {
         viewModelScope.launch {
             toggleTaskStatusUseCase(taskId).onFailure { error ->
