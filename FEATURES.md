@@ -39,6 +39,8 @@ Items are grouped by priority and implementation complexity.
 
 - [ ] **Categories / Tags**  
   Let users assign custom labels (e.g. Work, Personal, Shopping) to group tasks, with a filter chip per tag.
+  Assign emojis to tasks
+  In filters, show a chip for each tag that filters the list to only tasks with that tag. add possibility to add custom lists
 
 - [ ] **Sub-tasks (checklists)**  
   Support nested checklist items inside a task so complex tasks can be broken into smaller steps.
@@ -54,6 +56,15 @@ Items are grouped by priority and implementation complexity.
 
 - [ ] **Sorting options**  
   Allow tasks to be sorted by due date, priority, creation date, or alphabetically.
+
+- [ ] **Multi-select & bulk actions**  
+  Long-press to select multiple tasks and perform batch operations like delete, change priority, or mark complete.
+
+- [ ] **Customisable notifications**  
+  Let users choose how and when they receive reminders (e.g. 10 minutes before, at a specific time, or only for high-priority tasks).
+
+- [ ] **Localisation / internationalisation (i18n)**
+  Support multiple languages and regional formats using string resources and locale-aware formatting.
 
 ---
 
