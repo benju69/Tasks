@@ -27,19 +27,19 @@ A clean, minimal Android to-do list app built with modern Android technologies.
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Language | Kotlin |
-| UI | Jetpack Compose + Material 3 |
-| Architecture | Clean Architecture + MVVM |
-| Dependency Injection | Hilt (Dagger) |
-| Database | Room (SQLite) |
-| Preferences | Jetpack DataStore |
-| Async | Kotlin Coroutines + Flow |
-| Navigation | Jetpack Navigation Compose |
-| Testing | JUnit 4 + Kotlin Coroutines Test |
-| Min SDK | 26 (Android 8.0) |
-| Target SDK | 36 (Android 15) |
+| Layer | Technology                       |
+|---|----------------------------------|
+| Language | Kotlin                           |
+| UI | Jetpack Compose + Material 3     |
+| Architecture | Clean Architecture + MVVM        |
+| Dependency Injection | Hilt (Dagger)                    |
+| Database | Room (SQLite)                    |
+| Preferences | Jetpack DataStore                |
+| Async | Kotlin Coroutines + Flow         |
+| Navigation | Jetpack Navigation Compose       |
+| Testing | JUnit 5 (JUnit Jupiter) + Kotlin Coroutines Test |
+| Min SDK | 26 (Android 8.0)                 |
+| Target SDK | 36 (Android 16)                  |
 
 ---
 
