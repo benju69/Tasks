@@ -12,7 +12,7 @@ Items are grouped by priority and implementation complexity.
 - Filter tasks by All / Active / Completed
 - Toggle task completion
 - Dark mode (persisted via DataStore)
-- Clean Architecture (domain → data → feature)
+- Clean Architecture (feature → domain ← data)
 - Unit tests for ViewModels, repositories, use-cases and mappers
 
 ---
