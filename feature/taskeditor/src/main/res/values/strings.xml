@@ -9,5 +9,10 @@
     <string name="task_editor_field_description">Description</string>
     <string name="task_editor_field_priority">Priority</string>
     <string name="task_editor_error_title_required">Title is required</string>
+
+    <!-- Priority labels -->
+    <string name="priority_low">Low</string>
+    <string name="priority_medium">Medium</string>
+    <string name="priority_high">High</string>
 </resources>
 

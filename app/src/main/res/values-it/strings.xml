@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Simple Tasks</string>
+
+    <!-- Task List -->
+    <string name="task_list_title">Attività</string>
+    <string name="task_list_add">Aggiungi attività</string>
+    <string name="task_list_filter_all">Tutte</string>
+    <string name="task_list_filter_active">Attive</string>
+    <string name="task_list_filter_completed">Completate</string>
+    <string name="task_list_empty">Nessuna attività</string>
+
+    <!-- Task Editor -->
+    <string name="task_editor_title_new">Nuova attività</string>
+    <string name="task_editor_title_edit">Modifica attività</string>
+    <string name="task_editor_field_title">Titolo</string>
+    <string name="task_editor_field_description">Descrizione</string>
+    <string name="task_editor_field_priority">Priorità</string>
+    <string name="task_editor_save">Salva</string>
+    <string name="task_editor_cancel">Annulla</string>
+
+    <!-- Priority -->
+    <string name="priority_low">Bassa</string>
+    <string name="priority_medium">Media</string>
+    <string name="priority_high">Alta</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Impostazioni</string>
+    <string name="settings_dark_mode">Modalità scura</string>
+
+    <!-- Common -->
+    <string name="delete">Elimina</string>
+    <string name="edit">Modifica</string>
+</resources>
+

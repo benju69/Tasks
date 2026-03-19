@@ -94,7 +94,14 @@ fun TaskEditorScreen(
                     FilterChip(
                         selected = viewState.priority == priority,
                         onClick = { viewModel.updatePriority(priority) },
-                        label = { Text(priority.name) }
+                        label = {
+                            val label = when (priority) {
+                                Priority.LOW -> stringResource(R.string.priority_low)
+                                Priority.MEDIUM -> stringResource(R.string.priority_medium)
+                                Priority.HIGH -> stringResource(R.string.priority_high)
+                            }
+                            Text(label)
+                        }
                     )
                 }
             }

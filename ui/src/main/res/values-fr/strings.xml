@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="delete_task_dialog_title">Supprimer la tâche</string>
+    <string name="delete_task_dialog_message">Voulez-vous vraiment supprimer \"%1$s\" ? Cette action est irréversible.</string>
+    <string name="delete">Supprimer</string>
+    <string name="cancel">Annuler</string>
+    <string name="priority_low">Faible</string>
+    <string name="priority_medium">Moyenne</string>
+    <string name="priority_high">Haute</string>
+    <string name="cd_delete_task">Supprimer la tâche</string>
+</resources>
+
