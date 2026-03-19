@@ -4,6 +4,7 @@ import app.cash.turbine.test
 import fr.benju.tasks.core.test.CoroutineTestExtension
 import fr.benju.tasks.domain.model.Priority
 import fr.benju.tasks.domain.usecase.AddTaskUseCase
+import fr.benju.tasks.domain.usecase.GetTaskByIdUseCase
 import fr.benju.tasks.domain.usecase.UpdateTaskUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,6 +22,7 @@ class TaskEditorViewModelTest {
 
     private val addTaskUseCase: AddTaskUseCase = mockk()
     private val updateTaskUseCase: UpdateTaskUseCase = mockk()
+    private val getTaskByIdUseCase: GetTaskByIdUseCase = mockk()
 
     @Test
     fun `updateTitle should update view state`() = runTest {
@@ -28,6 +30,7 @@ class TaskEditorViewModelTest {
         val viewModel = TaskEditorViewModel(
             addTaskUseCase,
             updateTaskUseCase,
+            getTaskByIdUseCase,
             coroutineExtension.dispatchers
         )
 
@@ -44,6 +47,7 @@ class TaskEditorViewModelTest {
         val viewModel = TaskEditorViewModel(
             addTaskUseCase,
             updateTaskUseCase,
+            getTaskByIdUseCase,
             coroutineExtension.dispatchers
         )
 
@@ -62,6 +66,7 @@ class TaskEditorViewModelTest {
         val viewModel = TaskEditorViewModel(
             addTaskUseCase,
             updateTaskUseCase,
+            getTaskByIdUseCase,
             coroutineExtension.dispatchers
         )
         viewModel.updateTitle("Test Task")
@@ -81,6 +86,7 @@ class TaskEditorViewModelTest {
         val viewModel = TaskEditorViewModel(
             addTaskUseCase,
             updateTaskUseCase,
+            getTaskByIdUseCase,
             coroutineExtension.dispatchers
         )
         viewModel.updateTitle("Test Task")

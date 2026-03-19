@@ -1,6 +1,7 @@
 package fr.benju.tasks.feature.tasklist
 
 import app.cash.turbine.test
+import fr.benju.tasks.core.test.CoroutineTestExtension
 import fr.benju.tasks.core.test.TaskTestFactory
 import fr.benju.tasks.domain.model.TaskFilter
 import fr.benju.tasks.domain.usecase.DeleteTaskUseCase
@@ -14,8 +15,13 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.RegisterExtension
 
 class TaskListViewModelTest {
+
+    @JvmField
+    @RegisterExtension
+    val coroutineExtension = CoroutineTestExtension()
 
     private val getTasksUseCase: GetTasksUseCase = mockk()
     private val toggleTaskStatusUseCase: ToggleTaskStatusUseCase = mockk()
