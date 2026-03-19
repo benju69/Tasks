@@ -63,3 +63,4 @@ lint/tmp/
 # Android Profiling
 *.hprof
 keystore.properties
+.DS_Store
