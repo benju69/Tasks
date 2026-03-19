@@ -106,9 +106,9 @@ fun TaskEditorScreen(
                 }
             }
 
-            if (viewState.error != null) {
+            viewState.error?.let { errorRes ->
                 Text(
-                    text = viewState.error ?: "",
+                    text = stringResource(errorRes),
                     color = MaterialTheme.colorScheme.error,
                     style = MaterialTheme.typography.bodySmall
                 )
