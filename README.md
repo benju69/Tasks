@@ -110,7 +110,9 @@ cd Tasks
 ./gradlew test
 
 # Specific module
-./gradlew :feature:test
+./gradlew :feature:tasklist:test
+./gradlew :feature:taskeditor:test
+./gradlew :feature:settings:test
 ./gradlew :data:test
 ```
 
