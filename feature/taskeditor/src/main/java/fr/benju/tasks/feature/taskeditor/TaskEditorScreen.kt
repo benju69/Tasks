@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -37,10 +38,15 @@ fun TaskEditorScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(if (taskId != null) "Edit Task" else "New Task") },
+                title = {
+                    Text(
+                        if (taskId != null) stringResource(R.string.task_editor_title_edit)
+                        else stringResource(R.string.task_editor_title_new)
+                    )
+                },
                 navigationIcon = {
                     TextButton(onClick = onDismiss) {
-                        Text("Cancel")
+                        Text(stringResource(R.string.task_editor_cancel))
                     }
                 },
                 actions = {
@@ -48,7 +54,7 @@ fun TaskEditorScreen(
                         onClick = { viewModel.saveTask() },
                         enabled = !viewState.isSaving
                     ) {
-                        Text("Save")
+                        Text(stringResource(R.string.task_editor_save))
                     }
                 }
             )
@@ -64,7 +70,7 @@ fun TaskEditorScreen(
             OutlinedTextField(
                 value = viewState.title,
                 onValueChange = { viewModel.updateTitle(it) },
-                label = { Text("Title") },
+                label = { Text(stringResource(R.string.task_editor_field_title)) },
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true
             )
@@ -72,13 +78,13 @@ fun TaskEditorScreen(
             OutlinedTextField(
                 value = viewState.description,
                 onValueChange = { viewModel.updateDescription(it) },
-                label = { Text("Description") },
+                label = { Text(stringResource(R.string.task_editor_field_description)) },
                 modifier = Modifier.fillMaxWidth(),
                 minLines = 3,
                 maxLines = 5
             )
 
-            Text("Priority", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.task_editor_field_priority), style = MaterialTheme.typography.titleMedium)
 
             Row(
                 modifier = Modifier.fillMaxWidth(),

@@ -66,4 +66,8 @@ class TaskListViewModel @Inject constructor(
         }
     }
 
+    fun clearError() {
+        _viewState.value = _viewState.value.copy(error = null)
+    }
+
 }

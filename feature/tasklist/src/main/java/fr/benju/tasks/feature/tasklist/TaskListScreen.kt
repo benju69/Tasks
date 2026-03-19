@@ -16,11 +16,16 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
@@ -54,6 +59,7 @@ fun TaskListScreen(
         onFilterSelected = viewModel::applyFilter,
         onToggleComplete = viewModel::onTaskToggled,
         onDeleteTask = viewModel::onDeleteTask,
+        onErrorShown = viewModel::clearError,
         modifier = modifier
     )
 }
@@ -68,16 +74,28 @@ internal fun TaskListContent(
     onFilterSelected: (TaskFilter) -> Unit,
     onToggleComplete: (Long) -> Unit,
     onDeleteTask: (Long) -> Unit,
+    onErrorShown: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    val currentOnErrorShown by rememberUpdatedState(onErrorShown)
+
+    LaunchedEffect(viewState.error) {
+        viewState.error?.let { message ->
+            snackbarHostState.showSnackbar(message)
+            currentOnErrorShown()
+        }
+    }
+
     Scaffold(
+        snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.app_name)) },
                 actions = {
                     IconButton(onClick = onSettingsClick) {
                         val icon = painterResource(R.drawable.ic_settings_rounded_24dp)
-                        Icon(icon, contentDescription = "Settings")
+                        Icon(icon, contentDescription = stringResource(R.string.cd_settings))
                     }
                 }
             )
@@ -85,7 +103,7 @@ internal fun TaskListContent(
         floatingActionButton = {
             FloatingActionButton(onClick = onAddTaskClick) {
                 val icon = painterResource(R.drawable.ic_add_task_rounded_24dp)
-                Icon(icon, contentDescription = "Add Task")
+                Icon(icon, contentDescription = stringResource(R.string.cd_add_task))
             }
         }
     ) { paddingValues ->
@@ -104,17 +122,17 @@ internal fun TaskListContent(
                 FilterChip(
                     selected = viewState.filter == TaskFilter.ALL,
                     onClick = { onFilterSelected(TaskFilter.ALL) },
-                    label = { Text("All") }
+                    label = { Text(stringResource(R.string.task_list_filter_all)) }
                 )
                 FilterChip(
                     selected = viewState.filter == TaskFilter.ACTIVE,
                     onClick = { onFilterSelected(TaskFilter.ACTIVE) },
-                    label = { Text("Active") }
+                    label = { Text(stringResource(R.string.task_list_filter_active)) }
                 )
                 FilterChip(
                     selected = viewState.filter == TaskFilter.COMPLETED,
                     onClick = { onFilterSelected(TaskFilter.COMPLETED) },
-                    label = { Text("Completed") }
+                    label = { Text(stringResource(R.string.task_list_filter_completed)) }
                 )
             }
 
@@ -124,7 +142,7 @@ internal fun TaskListContent(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text("No tasks yet")
+                    Text(stringResource(R.string.task_list_empty))
                 }
             } else {
                 LazyColumn(
@@ -170,6 +188,7 @@ private fun TaskListContentLightPreview() {
             onFilterSelected = {},
             onToggleComplete = {},
             onDeleteTask = {},
+            onErrorShown = {},
         )
     }
 }
@@ -187,6 +206,7 @@ private fun TaskListContentDarkPreview() {
                 onFilterSelected = {},
                 onToggleComplete = {},
                 onDeleteTask = {},
+                onErrorShown = {},
             )
         }
     }
@@ -204,6 +224,7 @@ private fun TaskListContentEmptyPreview() {
             onFilterSelected = {},
             onToggleComplete = {},
             onDeleteTask = {},
+            onErrorShown = {},
         )
     }
 }

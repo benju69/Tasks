@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Task Editor -->
+    <string name="task_editor_title_new">New Task</string>
+    <string name="task_editor_title_edit">Edit Task</string>
+    <string name="task_editor_cancel">Cancel</string>
+    <string name="task_editor_save">Save</string>
+    <string name="task_editor_field_title">Title</string>
+    <string name="task_editor_field_description">Description</string>
+    <string name="task_editor_field_priority">Priority</string>
+    <string name="task_editor_error_title_required">Title is required</string>
+</resources>
+

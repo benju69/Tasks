@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,8 +49,10 @@ fun TaskCard(
     if (showDeleteConfirmation && onDeleteTask != null) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
-            title = { Text("Delete task") },
-            text = { Text("Are you sure you want to delete \"${task.title}\"? This action cannot be undone.") },
+            title = { Text(stringResource(R.string.delete_task_dialog_title)) },
+            text = {
+                Text(stringResource(R.string.delete_task_dialog_message, task.title))
+            },
             confirmButton = {
                 Button(
                     onClick = {
@@ -60,12 +63,12 @@ fun TaskCard(
                         containerColor = MaterialTheme.colorScheme.error
                     )
                 ) {
-                    Text("Delete")
+                    Text(stringResource(R.string.delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteConfirmation = false }) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
@@ -116,7 +119,7 @@ fun TaskCard(
                 IconButton(onClick = { showDeleteConfirmation = true }) {
                     Icon(
                         painter = painterResource(R.drawable.ic_delete_rounded_24dp),
-                        contentDescription = "Delete task",
+                        contentDescription = stringResource(R.string.cd_delete_task),
                         tint = Color.Red.copy(alpha = 0.7f),
                     )
                 }

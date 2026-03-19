@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Task Card -->
+    <string name="delete_task_dialog_title">Delete task</string>
+    <string name="delete_task_dialog_message">Are you sure you want to delete \"%1$s\"? This action cannot be undone.</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_delete_task">Delete task</string>
+</resources>
+

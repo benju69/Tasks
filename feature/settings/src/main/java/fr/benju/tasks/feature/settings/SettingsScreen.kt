@@ -23,6 +23,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
@@ -37,11 +38,11 @@ fun SettingsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Settings") },
+                title = { Text(stringResource(R.string.settings_title)) },
                 navigationIcon = {
                     IconButton(onClick = { onBack() }) {
                         val icon = painterResource(R.drawable.ic_arrow_back_rounded_24dp)
-                        Icon(icon, contentDescription = "Back")
+                        Icon(icon, contentDescription = stringResource(R.string.cd_back))
                     }
                 }
             )
@@ -59,7 +60,7 @@ fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Dark Mode",
+                    text = stringResource(R.string.settings_dark_mode),
                     style = MaterialTheme.typography.titleMedium
                 )
 
@@ -76,7 +77,7 @@ fun SettingsScreen(
             )
 
             Text(
-                text = "Version 1.0.0",
+                text = stringResource(R.string.settings_version),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
