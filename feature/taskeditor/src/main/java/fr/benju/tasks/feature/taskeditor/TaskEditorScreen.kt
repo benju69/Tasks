@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -22,10 +24,13 @@ fun TaskEditorScreen(
 ) {
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val currentOnTaskSaved by rememberUpdatedState(onTaskSaved)
+    val titleFocusRequester = remember { FocusRequester() }
 
     LaunchedEffect(taskId) {
         if (taskId != null) {
             viewModel.loadTask(taskId)
+        } else {
+            runCatching { titleFocusRequester.requestFocus() }
         }
     }
 
@@ -71,7 +76,9 @@ fun TaskEditorScreen(
                 value = viewState.title,
                 onValueChange = { viewModel.updateTitle(it) },
                 label = { Text(stringResource(R.string.task_editor_field_title)) },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(titleFocusRequester),
                 singleLine = true
             )
 
