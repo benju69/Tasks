@@ -1,5 +1,6 @@
 package fr.benju.tasks.feature.taskeditor
 
+import androidx.annotation.StringRes
 import fr.benju.tasks.domain.model.Priority
 
 data class TaskEditorViewState(
@@ -8,5 +9,5 @@ data class TaskEditorViewState(
     val description: String = "",
     val priority: Priority = Priority.MEDIUM,
     val isSaving: Boolean = false,
-    val error: String? = null
+    @StringRes val error: Int? = null
 )

@@ -9,7 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.res.stringResource
 import fr.benju.tasks.domain.model.Priority
+import fr.benju.tasks.ui.R
 import fr.benju.tasks.ui.theme.PriorityHigh
 import fr.benju.tasks.ui.theme.PriorityLow
 import fr.benju.tasks.ui.theme.PriorityMedium
@@ -19,14 +21,14 @@ fun PriorityChip(
     priority: Priority,
     modifier: Modifier = Modifier
 ) {
-    val (color, label) = when (priority) {
-        Priority.LOW -> PriorityLow to "Low"
-        Priority.MEDIUM -> PriorityMedium to "Medium"
-        Priority.HIGH -> PriorityHigh to "High"
+    val (color, labelRes) = when (priority) {
+        Priority.LOW -> PriorityLow to R.string.priority_low
+        Priority.MEDIUM -> PriorityMedium to R.string.priority_medium
+        Priority.HIGH -> PriorityHigh to R.string.priority_high
     }
 
     Text(
-        text = label,
+        text = stringResource(labelRes),
         modifier = modifier
             .background(color.copy(alpha = 0.2f), RoundedCornerShape(8.dp))
             .padding(horizontal = 12.dp, vertical = 4.dp),

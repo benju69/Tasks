@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="task_editor_title_new">Neue Aufgabe</string>
+    <string name="task_editor_title_edit">Aufgabe bearbeiten</string>
+    <string name="task_editor_cancel">Abbrechen</string>
+    <string name="task_editor_save">Speichern</string>
+    <string name="task_editor_field_title">Titel</string>
+    <string name="task_editor_field_description">Beschreibung</string>
+    <string name="task_editor_field_priority">Priorität</string>
+    <string name="task_editor_error_title_required">Titel ist erforderlich</string>
+    <string name="task_editor_error_save_failed">Aufgabe konnte nicht gespeichert werden. Bitte erneut versuchen.</string>
+    <string name="priority_low">Niedrig</string>
+    <string name="priority_medium">Mittel</string>
+    <string name="priority_high">Hoch</string>
+</resources>
+

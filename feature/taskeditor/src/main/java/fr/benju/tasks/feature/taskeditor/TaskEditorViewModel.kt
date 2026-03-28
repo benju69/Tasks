@@ -57,7 +57,7 @@ class TaskEditorViewModel @Inject constructor(
     fun saveTask() {
         val state = _viewState.value
         if (state.title.isBlank()) {
-            _viewState.value = state.copy(error = "Title is required")
+            _viewState.value = state.copy(error = R.string.task_editor_error_title_required)
             return
         }
 
@@ -81,10 +81,10 @@ class TaskEditorViewModel @Inject constructor(
                 onSuccess = {
                     _saveSuccess.emit(Unit)
                 },
-                onFailure = { error ->
+                onFailure = {
                     _viewState.value = _viewState.value.copy(
                         isSaving = false,
-                        error = error.message
+                        error = R.string.task_editor_error_save_failed
                     )
                 }
             )

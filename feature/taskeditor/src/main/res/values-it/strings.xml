@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="task_editor_title_new">Nuova attività</string>
+    <string name="task_editor_title_edit">Modifica attività</string>
+    <string name="task_editor_cancel">Annulla</string>
+    <string name="task_editor_save">Salva</string>
+    <string name="task_editor_field_title">Titolo</string>
+    <string name="task_editor_field_description">Descrizione</string>
+    <string name="task_editor_field_priority">Priorità</string>
+    <string name="task_editor_error_title_required">Il titolo è obbligatorio</string>
+    <string name="task_editor_error_save_failed">Impossibile salvare l\'attività. Riprova.</string>
+    <string name="priority_low">Bassa</string>
+    <string name="priority_medium">Media</string>
+    <string name="priority_high">Alta</string>
+</resources>
+

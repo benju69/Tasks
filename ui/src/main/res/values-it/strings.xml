@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="delete_task_dialog_title">Elimina attività</string>
+    <string name="delete_task_dialog_message">Sei sicuro di voler eliminare \"%1$s\"? Questa azione non può essere annullata.</string>
+    <string name="delete">Elimina</string>
+    <string name="cancel">Annulla</string>
+    <string name="priority_low">Bassa</string>
+    <string name="priority_medium">Media</string>
+    <string name="priority_high">Alta</string>
+    <string name="cd_delete_task">Elimina attività</string>
+</resources>
+
