@@ -13,5 +13,9 @@
 
     <!-- Content Descriptions -->
     <string name="cd_delete_task">Delete task</string>
+
+    <!-- Due date display -->
+    <string name="due_date_label">Due: %1$s</string>
+    <string name="due_date_overdue">Overdue: %1$s</string>
 </resources>
 

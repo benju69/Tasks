@@ -35,6 +35,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.benju.tasks.domain.model.Task
 import fr.benju.tasks.ui.R
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 fun TaskCard(
@@ -112,7 +117,32 @@ fun TaskCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                PriorityChip(priority = task.priority)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    PriorityChip(priority = task.priority)
+
+                    task.dueDate?.let { dueDateMs ->
+                        val localDate = Instant.ofEpochMilli(dueDateMs)
+                            .atZone(ZoneId.systemDefault())
+                            .toLocalDate()
+                        val today = LocalDate.now(ZoneId.systemDefault())
+                        val isOverdue = !task.isCompleted && localDate.isBefore(today)
+                        val formattedDate = localDate.format(
+                            DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
+                        )
+                        Text(
+                            text = stringResource(
+                                if (isOverdue) R.string.due_date_overdue else R.string.due_date_label,
+                                formattedDate
+                            ),
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (isOverdue) MaterialTheme.colorScheme.error
+                            else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
 
             if (onDeleteTask != null) {

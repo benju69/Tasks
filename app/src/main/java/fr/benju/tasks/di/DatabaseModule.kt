@@ -24,7 +24,7 @@ object DatabaseModule {
             context,
             TaskDatabase::class.java,
             TaskDatabase.DATABASE_NAME
-        ).build()
+        ).addMigrations(*TaskDatabase.migrations).build()
     }
 
     @Provides

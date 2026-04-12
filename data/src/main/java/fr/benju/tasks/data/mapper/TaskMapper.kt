@@ -14,7 +14,8 @@ class TaskMapper @Inject constructor() {
             description = entity.description,
             priority = Priority.valueOf(entity.priority),
             isCompleted = entity.isCompleted,
-            createdAt = entity.createdAt
+            createdAt = entity.createdAt,
+            dueDate = entity.dueDate
         )
     }
 
@@ -25,7 +26,8 @@ class TaskMapper @Inject constructor() {
             description = domain.description,
             priority = domain.priority.name,
             isCompleted = domain.isCompleted,
-            createdAt = domain.createdAt
+            createdAt = domain.createdAt,
+            dueDate = domain.dueDate
         )
     }
 }

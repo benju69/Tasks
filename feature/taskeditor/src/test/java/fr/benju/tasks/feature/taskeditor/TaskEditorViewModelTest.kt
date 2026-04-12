@@ -3,12 +3,16 @@ package fr.benju.tasks.feature.taskeditor
 import app.cash.turbine.test
 import fr.benju.tasks.core.test.CoroutineTestExtension
 import fr.benju.tasks.domain.model.Priority
+import fr.benju.tasks.domain.service.ReminderScheduler
 import fr.benju.tasks.domain.usecase.AddTaskUseCase
 import fr.benju.tasks.domain.usecase.GetTaskByIdUseCase
 import fr.benju.tasks.domain.usecase.UpdateTaskUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.Runs
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
 import org.junit.jupiter.api.Test
@@ -23,6 +27,10 @@ class TaskEditorViewModelTest {
     private val addTaskUseCase: AddTaskUseCase = mockk()
     private val updateTaskUseCase: UpdateTaskUseCase = mockk()
     private val getTaskByIdUseCase: GetTaskByIdUseCase = mockk()
+    private val reminderScheduler: ReminderScheduler = mockk {
+        every { schedule(any(), any(), any()) } just Runs
+        every { cancel(any()) } just Runs
+    }
 
     @Test
     fun `updateTitle should update view state`() = runTest {
@@ -31,7 +39,8 @@ class TaskEditorViewModelTest {
             addTaskUseCase,
             updateTaskUseCase,
             getTaskByIdUseCase,
-            coroutineExtension.dispatchers
+            coroutineExtension.dispatchers,
+            reminderScheduler
         )
 
         // When
@@ -48,7 +57,8 @@ class TaskEditorViewModelTest {
             addTaskUseCase,
             updateTaskUseCase,
             getTaskByIdUseCase,
-            coroutineExtension.dispatchers
+            coroutineExtension.dispatchers,
+            reminderScheduler
         )
 
         // When
@@ -67,7 +77,8 @@ class TaskEditorViewModelTest {
             addTaskUseCase,
             updateTaskUseCase,
             getTaskByIdUseCase,
-            coroutineExtension.dispatchers
+            coroutineExtension.dispatchers,
+            reminderScheduler
         )
         viewModel.updateTitle("Test Task")
 
@@ -87,7 +98,8 @@ class TaskEditorViewModelTest {
             addTaskUseCase,
             updateTaskUseCase,
             getTaskByIdUseCase,
-            coroutineExtension.dispatchers
+            coroutineExtension.dispatchers,
+            reminderScheduler
         )
         viewModel.updateTitle("Test Task")
 

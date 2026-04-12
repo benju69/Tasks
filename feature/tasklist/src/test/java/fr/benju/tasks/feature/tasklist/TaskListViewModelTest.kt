@@ -4,13 +4,16 @@ import app.cash.turbine.test
 import fr.benju.tasks.core.test.CoroutineTestExtension
 import fr.benju.tasks.core.test.TaskTestFactory
 import fr.benju.tasks.domain.model.TaskFilter
+import fr.benju.tasks.domain.service.ReminderScheduler
 import fr.benju.tasks.domain.usecase.DeleteTaskUseCase
 import fr.benju.tasks.domain.usecase.GetTasksUseCase
 import fr.benju.tasks.domain.usecase.ToggleTaskStatusUseCase
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.just
 import io.mockk.mockk
+import io.mockk.Runs
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.amshove.kluent.shouldBeEqualTo
@@ -26,6 +29,10 @@ class TaskListViewModelTest {
     private val getTasksUseCase: GetTasksUseCase = mockk()
     private val toggleTaskStatusUseCase: ToggleTaskStatusUseCase = mockk()
     private val deleteTaskUseCase: DeleteTaskUseCase = mockk()
+    private val reminderScheduler: ReminderScheduler = mockk {
+        every { schedule(any(), any(), any()) } just Runs
+        every { cancel(any()) } just Runs
+    }
 
     @Test
     fun `init should load tasks`() = runTest {
@@ -37,7 +44,8 @@ class TaskListViewModelTest {
         val viewModel = TaskListViewModel(
             getTasksUseCase,
             toggleTaskStatusUseCase,
-            deleteTaskUseCase
+            deleteTaskUseCase,
+            reminderScheduler
         )
 
         // Then
@@ -58,7 +66,8 @@ class TaskListViewModelTest {
         val viewModel = TaskListViewModel(
             getTasksUseCase,
             toggleTaskStatusUseCase,
-            deleteTaskUseCase
+            deleteTaskUseCase,
+            reminderScheduler
         )
 
         // When
@@ -78,7 +87,8 @@ class TaskListViewModelTest {
         val viewModel = TaskListViewModel(
             getTasksUseCase,
             toggleTaskStatusUseCase,
-            deleteTaskUseCase
+            deleteTaskUseCase,
+            reminderScheduler
         )
 
         // When

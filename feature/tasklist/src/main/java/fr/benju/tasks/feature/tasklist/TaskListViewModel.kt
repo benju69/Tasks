@@ -3,6 +3,7 @@ package fr.benju.tasks.feature.tasklist
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import fr.benju.tasks.domain.model.TaskFilter
+import fr.benju.tasks.domain.service.ReminderScheduler
 import fr.benju.tasks.domain.usecase.DeleteTaskUseCase
 import fr.benju.tasks.domain.usecase.GetTasksUseCase
 import fr.benju.tasks.domain.usecase.ToggleTaskStatusUseCase
@@ -19,7 +20,8 @@ import javax.inject.Inject
 class TaskListViewModel @Inject constructor(
     private val getTasksUseCase: GetTasksUseCase,
     private val toggleTaskStatusUseCase: ToggleTaskStatusUseCase,
-    private val deleteTaskUseCase: DeleteTaskUseCase
+    private val deleteTaskUseCase: DeleteTaskUseCase,
+    private val reminderScheduler: ReminderScheduler
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(TaskListViewState())
@@ -51,8 +53,19 @@ class TaskListViewModel @Inject constructor(
     }
 
     fun onTaskToggled(taskId: Long) {
+        val task = _viewState.value.tasks.find { it.id == taskId }
         viewModelScope.launch {
-            toggleTaskStatusUseCase(taskId).onFailure { error ->
+            toggleTaskStatusUseCase(taskId).onSuccess {
+                if (task != null && task.dueDate != null) {
+                    if (!task.isCompleted) {
+                        // Task was active; it just became complete — cancel reminder
+                        reminderScheduler.cancel(taskId)
+                    } else {
+                        // Task was complete; it just became active — reschedule reminder
+                        reminderScheduler.schedule(taskId, task.title, task.dueDate)
+                    }
+                }
+            }.onFailure { error ->
                 _viewState.value = _viewState.value.copy(error = error.message)
             }
         }
@@ -60,7 +73,9 @@ class TaskListViewModel @Inject constructor(
 
     fun onDeleteTask(taskId: Long) {
         viewModelScope.launch {
-            deleteTaskUseCase(taskId).onFailure { error ->
+            deleteTaskUseCase(taskId).onSuccess {
+                reminderScheduler.cancel(taskId)
+            }.onFailure { error ->
                 _viewState.value = _viewState.value.copy(error = error.message)
             }
         }

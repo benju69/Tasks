@@ -11,7 +11,8 @@ object TaskTestFactory {
         description: String = "Test Description",
         priority: Priority = Priority.MEDIUM,
         isCompleted: Boolean = false,
-        createdAt: Long = System.currentTimeMillis()
+        createdAt: Long = System.currentTimeMillis(),
+        dueDate: Long? = null
     ): Task {
         return Task(
             id = id,
@@ -19,7 +20,8 @@ object TaskTestFactory {
             description = description,
             priority = priority,
             isCompleted = isCompleted,
-            createdAt = createdAt
+            createdAt = createdAt,
+            dueDate = dueDate
         )
     }
 
