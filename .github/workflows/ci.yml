@@ -5,6 +5,7 @@ on:
 
 permissions:
   contents: read
+  pull-requests: write
 
 jobs:
   build:
@@ -31,9 +32,21 @@ jobs:
         run: ./gradlew assembleDebug
 
       - name: Upload APK
+        id: upload-apk
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
           retention-days: 7
+
+      - name: Comment APK download link on PR
+        uses: actions/github-script@v7
+        with:
+          script: |
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `### 📦 Debug APK ready\n\n[Download app-debug.apk](${{ steps.upload-apk.outputs.artifact-url }})`
+            })
