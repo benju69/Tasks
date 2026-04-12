@@ -29,12 +29,11 @@ fun TaskEditorScreen(
     LaunchedEffect(taskId) {
         if (taskId != null) {
             viewModel.loadTask(taskId)
-        } else {
-            try {
-                titleFocusRequester.requestFocus()
-            } catch (e: IllegalStateException) {
-                // Ignore focus request failures, e.g., if the view is not yet attached
-            }
+        }
+        try {
+            titleFocusRequester.requestFocus()
+        } catch (e: IllegalStateException) {
+            // Ignore focus request failures, e.g., if the view is not yet attached
         }
     }
 
