@@ -6,7 +6,7 @@ This directory contains the iOS application entry point for the KMP Task Manager
 
 1. Build the KMP shared framework:
    ```
-   ./gradlew :data:embedAndSignAppleFrameworkForXcode
+   ./gradlew embedAndSignAppleFrameworkForXcode
    ```
 
 2. Open `iosApp.xcodeproj` in Xcode
