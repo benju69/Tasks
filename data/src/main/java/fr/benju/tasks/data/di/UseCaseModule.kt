@@ -17,51 +17,51 @@ import fr.benju.tasks.domain.usecase.UpdateTaskUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
-import dagger.hilt.android.scopes.ViewModelScoped
+import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
 @Module
-@InstallIn(ViewModelComponent::class)
+@InstallIn(SingletonComponent::class)
 abstract class UseCaseModule {
 
     @Binds
-    @ViewModelScoped
+    @Singleton
     abstract fun bindGetTasksUseCase(
         impl: GetTasksUseCaseImpl
     ): GetTasksUseCase
 
     @Binds
-    @ViewModelScoped
+    @Singleton
     abstract fun bindGetTaskByIdUseCase(
         impl: GetTaskByIdUseCaseImpl
     ): GetTaskByIdUseCase
 
     @Binds
-    @ViewModelScoped
+    @Singleton
     abstract fun bindUpdateTaskUseCase(
         impl: UpdateTaskUseCaseImpl
     ): UpdateTaskUseCase
 
     @Binds
-    @ViewModelScoped
+    @Singleton
     abstract fun bindDeleteTaskUseCase(
         impl: DeleteTaskUseCaseImpl
     ): DeleteTaskUseCase
 
     @Binds
+    @Singleton
     abstract fun bindToggleTaskStatusUseCase(
         impl: ToggleTaskStatusUseCaseImpl
     ): ToggleTaskStatusUseCase
 
     @Binds
-    @ViewModelScoped
+    @Singleton
     abstract fun bindGetDarkModeUseCase(
         impl: GetDarkModeUseCaseImpl
     ): GetDarkModeUseCase
 
     @Binds
-    @ViewModelScoped
+    @Singleton
     abstract fun bindSetDarkModeUseCase(
         impl: SetDarkModeUseCaseImpl
     ): SetDarkModeUseCase

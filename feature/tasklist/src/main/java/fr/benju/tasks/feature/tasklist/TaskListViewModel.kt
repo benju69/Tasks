@@ -56,13 +56,14 @@ class TaskListViewModel @Inject constructor(
         val task = _viewState.value.tasks.find { it.id == taskId }
         viewModelScope.launch {
             toggleTaskStatusUseCase(taskId).onSuccess {
-                if (task != null && task.dueDate != null) {
+                val dueDate = task?.dueDate
+                if (task != null && dueDate != null) {
                     if (!task.isCompleted) {
                         // Task was active; it just became complete — cancel reminder
                         reminderScheduler.cancel(taskId)
                     } else {
                         // Task was complete; it just became active — reschedule reminder
-                        reminderScheduler.schedule(taskId, task.title, task.dueDate)
+                        reminderScheduler.schedule(taskId, task.title, dueDate)
                     }
                 }
             }.onFailure { error ->
