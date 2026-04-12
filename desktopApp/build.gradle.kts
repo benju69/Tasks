@@ -21,8 +21,13 @@ kotlin {
 
             implementation(compose.desktop.currentOs)
             implementation(libs.koin.core)
+            implementation(libs.koin.compose)
+            implementation(libs.koin.compose.viewmodel)
             implementation(libs.sqldelight.sqlite.driver)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.androidx.navigation.compose)
+            implementation(libs.androidx.lifecycle.viewmodel.ktx)
+            implementation(libs.androidx.lifecycle.runtime.compose)
         }
     }
 }
