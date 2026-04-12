@@ -10,9 +10,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import fr.benju.tasks.domain.model.Priority
 import fr.benju.tasks.ui.Res
-import fr.benju.tasks.ui.priority_high
-import fr.benju.tasks.ui.priority_low
-import fr.benju.tasks.ui.priority_medium
 import fr.benju.tasks.ui.theme.PriorityHigh
 import fr.benju.tasks.ui.theme.PriorityLow
 import fr.benju.tasks.ui.theme.PriorityMedium
