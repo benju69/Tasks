@@ -1,0 +1,12 @@
+package fr.benju.tasks.data.preferences
+
+import com.russhwolf.settings.PreferencesSettings
+import com.russhwolf.settings.coroutines.FlowSettings
+import com.russhwolf.settings.coroutines.toFlowSettings
+import java.util.prefs.Preferences
+
+actual class SettingsFactory {
+    actual fun createSettings(): FlowSettings {
+        return PreferencesSettings(Preferences.userRoot().node("task-manager")).toFlowSettings()
+    }
+}

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Simple Tasks</string>
+    <string name="task_list_filter_all">Tutte</string>
+    <string name="task_list_filter_active">Attive</string>
+    <string name="task_list_filter_completed">Completate</string>
+    <string name="task_list_empty">Nessuna attività</string>
+    <string name="cd_settings">Impostazioni</string>
+    <string name="cd_add_task">Aggiungi attività</string>
+    <string name="task_editor_title_new">Nuova attività</string>
+    <string name="task_editor_title_edit">Modifica attività</string>
+    <string name="task_editor_cancel">Annulla</string>
+    <string name="task_editor_save">Salva</string>
+    <string name="task_editor_field_title">Titolo</string>
+    <string name="task_editor_field_description">Descrizione</string>
+    <string name="task_editor_field_priority">Priorità</string>
+    <string name="task_editor_error_title_required">Il titolo è obbligatorio</string>
+    <string name="task_editor_error_save_failed">Impossibile salvare l\'attività. Riprova.</string>
+    <string name="priority_low">Bassa</string>
+    <string name="priority_medium">Media</string>
+    <string name="priority_high">Alta</string>
+    <string name="settings_title">Impostazioni</string>
+    <string name="settings_dark_mode">Modalità scura</string>
+    <string name="settings_version">Versione 1.0.0</string>
+    <string name="cd_back">Indietro</string>
+    <string name="delete_task_dialog_title">Elimina attività</string>
+    <string name="delete_task_dialog_message">Sei sicuro di voler eliminare \"%1$s\"? Questa azione non può essere annullata.</string>
+    <string name="delete">Elimina</string>
+    <string name="cancel">Annulla</string>
+    <string name="cd_delete_task">Elimina attività</string>
+</resources>

@@ -1,65 +1,76 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
+    alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.ksp)
-    alias(libs.plugins.hilt)
+    alias(libs.plugins.sqldelight)
+}
+
+kotlin {
+    androidTarget()
+    jvm()
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
+
+    sourceSets {
+        commonMain.dependencies {
+            implementation(project(":domain"))
+            implementation(project(":core"))
+
+            // SQLDelight
+            implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.coroutines)
+
+            // Multiplatform Settings
+            implementation(libs.multiplatform.settings)
+            implementation(libs.multiplatform.settings.coroutines)
+
+            // Koin
+            implementation(libs.koin.core)
+
+            // Coroutines
+            implementation(libs.kotlinx.coroutines.core)
+        }
+        androidMain.dependencies {
+            implementation(libs.sqldelight.android.driver)
+            implementation(libs.koin.android)
+        }
+        val iosMain by creating {
+            dependsOn(commonMain.get())
+            dependencies {
+                implementation(libs.sqldelight.native.driver)
+            }
+        }
+        val iosX64Main by getting { dependsOn(iosMain) }
+        val iosArm64Main by getting { dependsOn(iosMain) }
+        val iosSimulatorArm64Main by getting { dependsOn(iosMain) }
+        jvmMain.dependencies {
+            implementation(libs.sqldelight.sqlite.driver)
+        }
+        commonTest.dependencies {
+            implementation(libs.junit.jupiter.api)
+            implementation(libs.mockk)
+            implementation(libs.kluent)
+            implementation(libs.kotlinx.coroutines.test)
+        }
+    }
 }
 
 android {
     namespace = "fr.benju.tasks.data"
     compileSdk = 36
-
     defaultConfig {
         minSdk = 26
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
-kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
+sqldelight {
+    databases {
+        create("TaskDatabase") {
+            packageName.set("fr.benju.tasks.data.database")
+        }
     }
-}
-
-dependencies {
-    implementation(project(":domain"))
-    implementation(project(":core"))
-
-    // Core
-    implementation(libs.androidx.core.ktx)
-
-    // Room
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
-
-    // DataStore
-    implementation(libs.androidx.datastore.preferences)
-
-    // Coroutines
-    implementation(libs.kotlinx.coroutines.android)
-
-    // Hilt
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-
-    // Testing
-    testImplementation(libs.junit.jupiter.api)
-    testRuntimeOnly(libs.junit.jupiter.engine)
-    testRuntimeOnly(libs.junit.platform.launcher)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kluent)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.room.testing)
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }
