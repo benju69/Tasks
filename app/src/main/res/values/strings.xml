@@ -31,4 +31,10 @@
     <!-- Common -->
     <string name="delete">Delete</string>
     <string name="edit">Edit</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Task Reminders</string>
+    <string name="notification_channel_description">Notifies you when a task is due</string>
+    <string name="notification_title">Task Due</string>
+    <string name="notification_text">"%1$s" is due today</string>
 </resources>

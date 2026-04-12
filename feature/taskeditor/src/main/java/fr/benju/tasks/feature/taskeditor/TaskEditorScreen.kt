@@ -5,6 +5,7 @@ package fr.benju.tasks.feature.taskeditor
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -13,6 +14,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.benju.tasks.domain.model.Priority
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 fun TaskEditorScreen(
@@ -40,6 +45,27 @@ fun TaskEditorScreen(
     LaunchedEffect(viewModel) {
         viewModel.saveSuccess.collect {
             currentOnTaskSaved()
+        }
+    }
+
+    if (viewState.showDatePicker) {
+        val datePickerState = rememberDatePickerState(
+            initialSelectedDateMillis = viewState.dueDate
+        )
+        DatePickerDialog(
+            onDismissRequest = { viewModel.hideDatePicker() },
+            confirmButton = {
+                TextButton(onClick = { viewModel.updateDueDate(datePickerState.selectedDateMillis) }) {
+                    Text(stringResource(R.string.task_editor_save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.hideDatePicker() }) {
+                    Text(stringResource(R.string.task_editor_cancel))
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
         }
     }
 
@@ -116,6 +142,29 @@ fun TaskEditorScreen(
                 }
             }
 
+            // Due date row
+            Text(stringResource(R.string.task_editor_field_due_date), style = MaterialTheme.typography.titleMedium)
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedButton(
+                    onClick = { viewModel.showDatePicker() },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    val label = viewState.dueDate?.let { formatDueDate(it) }
+                        ?: stringResource(R.string.task_editor_due_date_none)
+                    Text(label)
+                }
+                if (viewState.dueDate != null) {
+                    TextButton(onClick = { viewModel.updateDueDate(null) }) {
+                        Text(stringResource(R.string.task_editor_due_date_clear))
+                    }
+                }
+            }
+
             viewState.error?.let { errorRes ->
                 Text(
                     text = stringResource(errorRes),
@@ -129,4 +178,11 @@ fun TaskEditorScreen(
             }
         }
     }
+}
+
+private fun formatDueDate(epochMs: Long): String {
+    val localDate = Instant.ofEpochMilli(epochMs)
+        .atZone(ZoneId.systemDefault())
+        .toLocalDate()
+    return localDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
 }

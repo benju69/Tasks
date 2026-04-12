@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import fr.benju.tasks.core.dispatchers.ICoroutineDispatchers
 import fr.benju.tasks.domain.model.Priority
 import fr.benju.tasks.domain.model.Task
+import fr.benju.tasks.domain.service.ReminderScheduler
 import fr.benju.tasks.domain.usecase.AddTaskUseCase
 import fr.benju.tasks.domain.usecase.GetTaskByIdUseCase
 import fr.benju.tasks.domain.usecase.UpdateTaskUseCase
@@ -21,7 +22,8 @@ class TaskEditorViewModel @Inject constructor(
     private val addTaskUseCase: AddTaskUseCase,
     private val updateTaskUseCase: UpdateTaskUseCase,
     private val getTaskByIdUseCase: GetTaskByIdUseCase,
-    private val dispatchers: ICoroutineDispatchers
+    private val dispatchers: ICoroutineDispatchers,
+    private val reminderScheduler: ReminderScheduler
 ) : ViewModel() {
 
     private val _viewState = MutableStateFlow(TaskEditorViewState())
@@ -37,7 +39,8 @@ class TaskEditorViewModel @Inject constructor(
                 taskId = task.id,
                 title = task.title,
                 description = task.description,
-                priority = task.priority
+                priority = task.priority,
+                dueDate = task.dueDate
             )
         }
     }
@@ -54,6 +57,18 @@ class TaskEditorViewModel @Inject constructor(
         _viewState.value = _viewState.value.copy(priority = priority)
     }
 
+    fun updateDueDate(dateMs: Long?) {
+        _viewState.value = _viewState.value.copy(dueDate = dateMs, showDatePicker = false)
+    }
+
+    fun showDatePicker() {
+        _viewState.value = _viewState.value.copy(showDatePicker = true)
+    }
+
+    fun hideDatePicker() {
+        _viewState.value = _viewState.value.copy(showDatePicker = false)
+    }
+
     fun saveTask() {
         val state = _viewState.value
         if (state.title.isBlank()) {
@@ -68,26 +83,38 @@ class TaskEditorViewModel @Inject constructor(
                 id = state.taskId ?: 0,
                 title = state.title,
                 description = state.description,
-                priority = state.priority
+                priority = state.priority,
+                dueDate = state.dueDate
             )
 
-            val result = if (state.taskId == null) {
-                addTaskUseCase(task)
+            if (state.taskId == null) {
+                addTaskUseCase(task).fold(
+                    onSuccess = { newId ->
+                        state.dueDate?.let { reminderScheduler.schedule(newId, state.title, it) }
+                        _saveSuccess.emit(Unit)
+                    },
+                    onFailure = {
+                        _viewState.value = _viewState.value.copy(
+                            isSaving = false,
+                            error = R.string.task_editor_error_save_failed
+                        )
+                    }
+                )
             } else {
-                updateTaskUseCase(task)
+                updateTaskUseCase(task).fold(
+                    onSuccess = {
+                        reminderScheduler.cancel(state.taskId)
+                        state.dueDate?.let { reminderScheduler.schedule(state.taskId, state.title, it) }
+                        _saveSuccess.emit(Unit)
+                    },
+                    onFailure = {
+                        _viewState.value = _viewState.value.copy(
+                            isSaving = false,
+                            error = R.string.task_editor_error_save_failed
+                        )
+                    }
+                )
             }
-
-            result.fold(
-                onSuccess = {
-                    _saveSuccess.emit(Unit)
-                },
-                onFailure = {
-                    _viewState.value = _viewState.value.copy(
-                        isSaving = false,
-                        error = R.string.task_editor_error_save_failed
-                    )
-                }
-            )
         }
     }
 }

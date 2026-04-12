@@ -8,6 +8,8 @@ data class TaskEditorViewState(
     val title: String = "",
     val description: String = "",
     val priority: Priority = Priority.MEDIUM,
+    val dueDate: Long? = null,
+    val showDatePicker: Boolean = false,
     val isSaving: Boolean = false,
     @StringRes val error: Int? = null
 )
