@@ -1,40 +1,26 @@
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-
 plugins {
-    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.multiplatform)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
+kotlin {
+    jvm()
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
-    kotlin {
-        compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_17)
+    sourceSets {
+        commonMain.dependencies {
+            implementation(project(":domain"))
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlin.stdlib)
+        }
+        commonTest.dependencies {
+            api(libs.junit.jupiter.api)
+            api(libs.kotlinx.coroutines.test)
+            implementation(libs.junit.jupiter.params)
+            implementation(libs.mockk)
+            implementation(libs.kluent)
+            implementation(libs.turbine)
         }
     }
-}
-
-dependencies {
-    implementation(project(":domain"))
-
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlin.stdlib)
-
-    // Testing - api for test utilities in main source
-    api(libs.junit.jupiter.api)
-    api(libs.kotlinx.coroutines.test)
-
-    // Testing - only for tests, not exposed
-    testImplementation(libs.junit.jupiter.params)
-    testRuntimeOnly(libs.junit.jupiter.engine)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kluent)
-    testImplementation(libs.turbine)
-}
-
-tasks.withType<Test> {
-    useJUnitPlatform()
 }
