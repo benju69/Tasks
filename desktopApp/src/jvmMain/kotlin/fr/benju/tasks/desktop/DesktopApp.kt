@@ -1,12 +1,6 @@
-package fr.benju.tasks
+package fr.benju.tasks.desktop
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -16,25 +10,9 @@ import fr.benju.tasks.feature.settings.SettingsScreen
 import fr.benju.tasks.feature.settings.SettingsViewModel
 import fr.benju.tasks.feature.taskeditor.TaskEditorScreen
 import fr.benju.tasks.feature.tasklist.TaskListScreen
-import fr.benju.tasks.ui.theme.TaskManagerTheme
-import org.koin.compose.viewmodel.koinViewModel
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            val settingsViewModel: SettingsViewModel = koinViewModel()
-            val isDarkMode by settingsViewModel.darkModeFlow.collectAsState(initial = false)
-            TaskManagerTheme(isDarkMode) {
-                TaskManagerMainApp(settingsViewModel)
-            }
-        }
-    }
-}
 
 @Composable
-fun TaskManagerMainApp(settingsViewModel: SettingsViewModel) {
+fun DesktopApp(settingsViewModel: SettingsViewModel) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "task_list") {
         composable("task_list") {
