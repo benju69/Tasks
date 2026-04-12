@@ -25,3 +25,6 @@ DELETE FROM TaskEntity WHERE id = :taskId;
 
 deleteAllTasks:
 DELETE FROM TaskEntity;
+
+getLastInsertId:
+SELECT last_insert_rowid();

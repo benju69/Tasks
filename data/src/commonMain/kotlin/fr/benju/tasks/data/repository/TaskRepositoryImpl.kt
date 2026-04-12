@@ -43,8 +43,7 @@ class TaskRepositoryImpl(
                 isCompleted = task.isCompleted,
                 createdAt = task.createdAt,
             )
-            val allTasks = database.tasksQueries.getAllTasks().executeAsList()
-            val id = if (allTasks.isEmpty()) -1L else allTasks.maxOf { it.id }
+            val id = database.tasksQueries.getLastInsertId().executeAsOne()
             Result.success(id)
         } catch (e: Exception) {
             Result.failure(e)
