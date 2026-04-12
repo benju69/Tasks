@@ -90,7 +90,6 @@ class TaskEditorViewModel @Inject constructor(
             if (state.taskId == null) {
                 addTaskUseCase(task).fold(
                     onSuccess = { newId ->
-                        reminderScheduler.cancel(newId)
                         state.dueDate?.let { reminderScheduler.schedule(newId, state.title, it) }
                         _saveSuccess.emit(Unit)
                     },

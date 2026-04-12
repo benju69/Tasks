@@ -1,13 +1,10 @@
 package fr.benju.tasks.notification
 
-import android.Manifest
 import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.os.Build
-import androidx.core.content.ContextCompat
 import dagger.hilt.android.qualifiers.ApplicationContext
 import fr.benju.tasks.domain.service.ReminderScheduler
 import java.time.Instant
