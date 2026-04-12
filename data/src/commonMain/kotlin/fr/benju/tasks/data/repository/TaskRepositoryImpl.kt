@@ -2,17 +2,18 @@ package fr.benju.tasks.data.repository
 
 import app.cash.sqldelight.coroutines.asFlow
 import app.cash.sqldelight.coroutines.mapToList
+import fr.benju.tasks.core.dispatchers.ICoroutineDispatchers
 import fr.benju.tasks.data.database.TaskDatabase
 import fr.benju.tasks.data.mapper.TaskMapper
 import fr.benju.tasks.domain.model.Task
 import fr.benju.tasks.domain.repository.TaskRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class TaskRepositoryImpl(
     private val database: TaskDatabase,
     private val taskMapper: TaskMapper,
+    private val dispatchers: ICoroutineDispatchers,
 ) : TaskRepository {
 
     @Volatile
@@ -21,7 +22,7 @@ class TaskRepositoryImpl(
     override fun getTasks(): Flow<List<Task>> {
         return database.tasksQueries.getAllTasks()
             .asFlow()
-            .mapToList(Dispatchers.Default)
+            .mapToList(dispatchers.default)
             .map { entities ->
                 val tasks = entities.map { taskMapper.toDomain(it) }
                 cache = tasks.associateBy { it.id }

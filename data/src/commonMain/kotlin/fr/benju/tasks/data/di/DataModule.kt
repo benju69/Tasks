@@ -40,7 +40,7 @@ val dataModule = module {
     single { TaskMapper() }
 
     // Repositories
-    single<TaskRepository> { TaskRepositoryImpl(get(), get()) }
+    single<TaskRepository> { TaskRepositoryImpl(get(), get(), get()) }
     single<UserPreferencesRepository> { UserPreferencesRepositoryImpl(get()) }
 
     // Dispatchers

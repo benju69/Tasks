@@ -6,7 +6,7 @@ import java.io.File
 
 actual class DatabaseDriverFactory {
     actual fun createDriver(): SqlDriver {
-        val dbPath = File(System.getProperty("user.home"), ".taskmanager/tasks.db")
+        val dbPath = File(System.getProperty("user.home"), ".task-manager/tasks.db")
         dbPath.parentFile?.mkdirs()
         val driver = JdbcSqliteDriver("jdbc:sqlite:${dbPath.absolutePath}")
         TaskDatabase.Schema.create(driver)

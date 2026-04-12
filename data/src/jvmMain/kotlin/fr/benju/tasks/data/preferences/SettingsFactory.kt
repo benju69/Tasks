@@ -7,6 +7,6 @@ import java.util.prefs.Preferences
 
 actual class SettingsFactory {
     actual fun createSettings(): FlowSettings {
-        return PreferencesSettings(Preferences.userRoot().node("taskmanager")).toFlowSettings()
+        return PreferencesSettings(Preferences.userRoot().node("task-manager")).toFlowSettings()
     }
 }
