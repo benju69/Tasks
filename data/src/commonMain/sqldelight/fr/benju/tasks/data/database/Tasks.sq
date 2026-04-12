@@ -1,0 +1,27 @@
+CREATE TABLE IF NOT EXISTS TaskEntity (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT NOT NULL,
+    priority TEXT NOT NULL,
+    isCompleted INTEGER AS Boolean NOT NULL DEFAULT 0,
+    createdAt INTEGER NOT NULL
+);
+
+getAllTasks:
+SELECT * FROM TaskEntity ORDER BY createdAt DESC;
+
+getTaskById:
+SELECT * FROM TaskEntity WHERE id = :taskId;
+
+insertTask:
+INSERT INTO TaskEntity (title, description, priority, isCompleted, createdAt)
+VALUES (:title, :description, :priority, :isCompleted, :createdAt);
+
+updateTask:
+UPDATE TaskEntity SET title = :title, description = :description, priority = :priority, isCompleted = :isCompleted WHERE id = :id;
+
+deleteTask:
+DELETE FROM TaskEntity WHERE id = :taskId;
+
+deleteAllTasks:
+DELETE FROM TaskEntity;
