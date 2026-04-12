@@ -2,6 +2,7 @@ package fr.benju.tasks.core.test
 
 import fr.benju.tasks.domain.model.Priority
 import fr.benju.tasks.domain.model.Task
+import kotlinx.datetime.Clock
 
 object TaskTestFactory {
 
@@ -11,7 +12,7 @@ object TaskTestFactory {
         description: String = "Test Description",
         priority: Priority = Priority.MEDIUM,
         isCompleted: Boolean = false,
-        createdAt: Long = System.currentTimeMillis()
+        createdAt: Long = Clock.System.now().toEpochMilliseconds()
     ): Task {
         return Task(
             id = id,
