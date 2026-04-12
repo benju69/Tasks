@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -28,13 +30,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import fr.benju.tasks.domain.model.Task
-import fr.benju.tasks.ui.R
+import fr.benju.tasks.ui.Res
+import fr.benju.tasks.ui.cancel
+import fr.benju.tasks.ui.cd_delete_task
+import fr.benju.tasks.ui.delete
+import fr.benju.tasks.ui.delete_task_dialog_message
+import fr.benju.tasks.ui.delete_task_dialog_title
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun TaskCard(
@@ -49,9 +54,9 @@ fun TaskCard(
     if (showDeleteConfirmation && onDeleteTask != null) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
-            title = { Text(stringResource(R.string.delete_task_dialog_title)) },
+            title = { Text(stringResource(Res.string.delete_task_dialog_title)) },
             text = {
-                Text(stringResource(R.string.delete_task_dialog_message, task.title))
+                Text(stringResource(Res.string.delete_task_dialog_message, task.title))
             },
             confirmButton = {
                 Button(
@@ -63,12 +68,12 @@ fun TaskCard(
                         containerColor = MaterialTheme.colorScheme.error
                     )
                 ) {
-                    Text(stringResource(R.string.delete))
+                    Text(stringResource(Res.string.delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteConfirmation = false }) {
-                    Text(stringResource(R.string.cancel))
+                    Text(stringResource(Res.string.cancel))
                 }
             }
         )
@@ -81,7 +86,9 @@ fun TaskCard(
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(8.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Checkbox(
@@ -118,29 +125,12 @@ fun TaskCard(
             if (onDeleteTask != null) {
                 IconButton(onClick = { showDeleteConfirmation = true }) {
                     Icon(
-                        painter = painterResource(R.drawable.ic_delete_rounded_24dp),
-                        contentDescription = stringResource(R.string.cd_delete_task),
+                        imageVector = Icons.Rounded.Delete,
+                        contentDescription = stringResource(Res.string.cd_delete_task),
                         tint = Color.Red.copy(alpha = 0.7f),
                     )
                 }
             }
         }
     }
-}
-
-@Preview
-@Composable
-private fun TaskCardPreview() {
-    TaskCard(
-        task = Task(
-            id = 1L,
-            title = "Buy groceries",
-            description = "Milk, eggs, bread, and cheese",
-            isCompleted = false,
-            priority = fr.benju.tasks.domain.model.Priority.HIGH
-        ),
-        onTaskClick = {},
-        onToggleComplete = {},
-        onDeleteTask = {}
-    )
 }

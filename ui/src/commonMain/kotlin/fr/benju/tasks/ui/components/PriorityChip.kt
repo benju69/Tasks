@@ -7,14 +7,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.res.stringResource
 import fr.benju.tasks.domain.model.Priority
-import fr.benju.tasks.ui.R
+import fr.benju.tasks.ui.Res
+import fr.benju.tasks.ui.priority_high
+import fr.benju.tasks.ui.priority_low
+import fr.benju.tasks.ui.priority_medium
 import fr.benju.tasks.ui.theme.PriorityHigh
 import fr.benju.tasks.ui.theme.PriorityLow
 import fr.benju.tasks.ui.theme.PriorityMedium
+import org.jetbrains.compose.resources.stringResource
 
 @Composable
 fun PriorityChip(
@@ -22,9 +24,9 @@ fun PriorityChip(
     modifier: Modifier = Modifier
 ) {
     val (color, labelRes) = when (priority) {
-        Priority.LOW -> PriorityLow to R.string.priority_low
-        Priority.MEDIUM -> PriorityMedium to R.string.priority_medium
-        Priority.HIGH -> PriorityHigh to R.string.priority_high
+        Priority.LOW -> PriorityLow to Res.string.priority_low
+        Priority.MEDIUM -> PriorityMedium to Res.string.priority_medium
+        Priority.HIGH -> PriorityHigh to Res.string.priority_high
     }
 
     Text(
