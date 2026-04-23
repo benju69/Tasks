@@ -2,7 +2,10 @@
 <resources>
     <string name="settings_title">Ajustes</string>
     <string name="settings_dark_mode">Modo oscuro</string>
-    <string name="settings_version">Versión 1.0.0</string>
+    <string name="settings_about">Acerca de</string>
+    <string name="settings_contact_support">Contactar soporte</string>
+    <string name="settings_support_me">Apóyame</string>
+    <string name="settings_version">Versión</string>
     <string name="cd_back">Atrás</string>
 </resources>
 
