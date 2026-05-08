@@ -1,8 +1,8 @@
 [versions]
 # Core
-kotlin = "2.3.20"
-agp = "9.1.0"
-ksp = "2.3.6"
+kotlin = "2.3.21"
+agp = "9.2.1"
+ksp = "2.3.7"
 
 # AndroidX Core
 androidxCore = "1.18.0"
@@ -11,7 +11,7 @@ androidxActivity = "1.13.0"
 androidxAppCompat = "1.7.1"
 
 # Compose
-composeBom = "2026.03.00"
+composeBom = "2026.05.00"
 
 # Dependency Injection
 hilt = "2.59.2"
@@ -27,7 +27,7 @@ dataStore = "1.2.1"
 coroutines = "1.10.2"
 
 # Navigation
-navigationCompose = "2.9.7"
+navigationCompose = "2.9.8"
 
 # Testing
 junit = "6.0.3"
