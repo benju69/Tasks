@@ -5,6 +5,7 @@
     <string name="settings_about">À propos</string>
     <string name="settings_contact_support">Contacter le support</string>
     <string name="settings_support_me">Me soutenir</string>
+    <string name="settings_rate_app">Noter l\'application</string>
     <string name="settings_version">Version</string>
     <string name="cd_back">Retour</string>
 </resources>

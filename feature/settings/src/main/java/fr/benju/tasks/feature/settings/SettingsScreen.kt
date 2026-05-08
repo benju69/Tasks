@@ -124,6 +124,32 @@ fun SettingsScreen(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .clickable {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=${context.packageName}")
+                        ).apply {
+                            addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY or Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_MULTIPLE_TASK)
+                        }
+                        val fallback = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/details?id=${context.packageName}")
+                        )
+                        runCatching { context.startActivity(intent) }
+                            .onFailure { runCatching { context.startActivity(fallback) } }
+                    }
+                    .padding(vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.settings_rate_app),
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(vertical = 12.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
