@@ -2,6 +2,7 @@
 
 package fr.benju.tasks.feature.taskeditor
 
+import android.text.format.DateFormat
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -11,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -84,6 +86,7 @@ fun TaskEditorScreen(
 
     // ── Time Picker ─────────────────────────────────────────────────────────
     if (viewState.showTimePicker) {
+        val context = LocalContext.current
         // Derive initial h/m from the existing dueDate if editing, otherwise default 09:00
         val existingZdt = viewState.dueDate?.let {
             Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault())
@@ -91,7 +94,7 @@ fun TaskEditorScreen(
         val timePickerState = rememberTimePickerState(
             initialHour = existingZdt?.hour ?: TaskEditorViewModel.DEFAULT_HOUR,
             initialMinute = existingZdt?.minute ?: TaskEditorViewModel.DEFAULT_MINUTE,
-            is24Hour = false
+            is24Hour = DateFormat.is24HourFormat(context)
         )
         AlertDialog(
             onDismissRequest = { viewModel.onTimePickerDismissed() },

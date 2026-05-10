@@ -129,12 +129,7 @@ fun TaskCard(
                         val datePart = zdt.toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
                         val timePart = zdt.toLocalTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
                         val formattedDateTime = "$datePart • $timePart"
-                        val repeatSuffix = when (task.repeatInterval) {
-                            RepeatInterval.DAILY -> " ↺"
-                            RepeatInterval.WEEKLY -> " ↺"
-                            RepeatInterval.MONTHLY -> " ↺"
-                            RepeatInterval.NONE -> ""
-                        }
+                        val repeatSuffix = if (task.repeatInterval != RepeatInterval.NONE) " ↺" else ""
                         Text(
                             text = stringResource(
                                 if (isOverdue) R.string.due_date_overdue else R.string.due_date_label,

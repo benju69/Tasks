@@ -87,9 +87,7 @@ class TaskEditorViewModel @Inject constructor(
             _viewState.value = _viewState.value.copy(showDatePicker = false)
             return
         }
-        val epochDay = LocalDate.ofEpochDay(0)
-            .plusDays(utcDateMs / MILLIS_PER_DAY)
-            .toEpochDay()
+        val epochDay = utcDateMs / MILLIS_PER_DAY
         _viewState.value = _viewState.value.copy(
             showDatePicker = false,
             showTimePicker = true,
