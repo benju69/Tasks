@@ -3,6 +3,8 @@
 package fr.benju.tasks.feature.taskeditor
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,8 +16,11 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.benju.tasks.domain.model.Priority
+import fr.benju.tasks.domain.model.RepeatInterval
 import java.time.Instant
+import java.time.LocalDate
 import java.time.ZoneId
+import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 
@@ -48,14 +53,22 @@ fun TaskEditorScreen(
         }
     }
 
+    // ── Date Picker ────────────────────────────────────────────────────────
     if (viewState.showDatePicker) {
-        val datePickerState = rememberDatePickerState(
-            initialSelectedDateMillis = viewState.dueDate
-        )
+        // Convert existing local dueDate to UTC date-only ms for the picker (avoids ±1 day shift)
+        val initialDateMs = viewState.dueDate?.let { localMs ->
+            Instant.ofEpochMilli(localMs)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+                .atStartOfDay(ZoneOffset.UTC)
+                .toInstant()
+                .toEpochMilli()
+        }
+        val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialDateMs)
         DatePickerDialog(
             onDismissRequest = { viewModel.hideDatePicker() },
             confirmButton = {
-                TextButton(onClick = { viewModel.updateDueDate(datePickerState.selectedDateMillis) }) {
+                TextButton(onClick = { viewModel.onDateSelected(datePickerState.selectedDateMillis) }) {
                     Text(stringResource(R.string.task_editor_save))
                 }
             },
@@ -67,6 +80,40 @@ fun TaskEditorScreen(
         ) {
             DatePicker(state = datePickerState)
         }
+    }
+
+    // ── Time Picker ─────────────────────────────────────────────────────────
+    if (viewState.showTimePicker) {
+        // Derive initial h/m from the existing dueDate if editing, otherwise default 09:00
+        val existingZdt = viewState.dueDate?.let {
+            Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault())
+        }
+        val timePickerState = rememberTimePickerState(
+            initialHour = existingZdt?.hour ?: TaskEditorViewModel.DEFAULT_HOUR,
+            initialMinute = existingZdt?.minute ?: TaskEditorViewModel.DEFAULT_MINUTE,
+            is24Hour = false
+        )
+        AlertDialog(
+            onDismissRequest = { viewModel.onTimePickerDismissed() },
+            title = { Text(stringResource(R.string.task_editor_field_time)) },
+            text = {
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                    TimePicker(state = timePickerState)
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.onTimeSelected(timePickerState.hour, timePickerState.minute)
+                }) {
+                    Text(stringResource(R.string.task_editor_save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.onTimePickerDismissed() }) {
+                    Text(stringResource(R.string.task_editor_cancel))
+                }
+            }
+        )
     }
 
     Scaffold(
@@ -98,7 +145,8 @@ fun TaskEditorScreen(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             OutlinedTextField(
@@ -120,6 +168,7 @@ fun TaskEditorScreen(
                 maxLines = 5
             )
 
+            // ── Priority ──────────────────────────────────────────────────
             Text(stringResource(R.string.task_editor_field_priority), style = MaterialTheme.typography.titleMedium)
 
             Row(
@@ -142,7 +191,7 @@ fun TaskEditorScreen(
                 }
             }
 
-            // Due date row
+            // ── Due date & time ───────────────────────────────────────────
             Text(stringResource(R.string.task_editor_field_due_date), style = MaterialTheme.typography.titleMedium)
 
             Row(
@@ -154,13 +203,40 @@ fun TaskEditorScreen(
                     onClick = { viewModel.showDatePicker() },
                     modifier = Modifier.weight(1f)
                 ) {
-                    val label = viewState.dueDate?.let { formatDueDate(it) }
+                    val label = viewState.dueDate?.let { formatDueDateTime(it) }
                         ?: stringResource(R.string.task_editor_due_date_none)
                     Text(label)
                 }
                 if (viewState.dueDate != null) {
-                    TextButton(onClick = { viewModel.updateDueDate(null) }) {
+                    TextButton(onClick = { viewModel.clearDueDate() }) {
                         Text(stringResource(R.string.task_editor_due_date_clear))
+                    }
+                }
+            }
+
+            // ── Repeat ────────────────────────────────────────────────────
+            if (viewState.dueDate != null) {
+                Text(stringResource(R.string.task_editor_field_repeat), style = MaterialTheme.typography.titleMedium)
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    RepeatInterval.entries.forEach { interval ->
+                        FilterChip(
+                            selected = viewState.repeatInterval == interval,
+                            onClick = { viewModel.updateRepeatInterval(interval) },
+                            label = {
+                                Text(
+                                    when (interval) {
+                                        RepeatInterval.NONE -> stringResource(R.string.task_editor_repeat_none)
+                                        RepeatInterval.DAILY -> stringResource(R.string.task_editor_repeat_daily)
+                                        RepeatInterval.WEEKLY -> stringResource(R.string.task_editor_repeat_weekly)
+                                        RepeatInterval.MONTHLY -> stringResource(R.string.task_editor_repeat_monthly)
+                                    }
+                                )
+                            }
+                        )
                     }
                 }
             }
@@ -180,9 +256,9 @@ fun TaskEditorScreen(
     }
 }
 
-private fun formatDueDate(epochMs: Long): String {
-    val localDate = Instant.ofEpochMilli(epochMs)
-        .atZone(ZoneId.systemDefault())
-        .toLocalDate()
-    return localDate.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+private fun formatDueDateTime(epochMs: Long): String {
+    val zdt = Instant.ofEpochMilli(epochMs).atZone(ZoneId.systemDefault())
+    val datePart = zdt.toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+    val timePart = zdt.toLocalTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+    return "$datePart • $timePart"
 }

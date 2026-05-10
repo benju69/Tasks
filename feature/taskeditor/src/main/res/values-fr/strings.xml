@@ -10,9 +10,16 @@
     <string name="task_editor_error_title_required">Le titre est obligatoire</string>
     <string name="task_editor_error_save_failed">Impossible d\'enregistrer la tâche. Veuillez réessayer.</string>
     <!-- Due date -->
-    <string name="task_editor_field_due_date">Date d\'échéance</string>
+    <string name="task_editor_field_due_date">Date &amp; heure d\'échéance</string>
     <string name="task_editor_due_date_none">Aucune date d\'échéance</string>
     <string name="task_editor_due_date_clear">Effacer</string>
+    <string name="task_editor_field_time">Choisir une heure</string>
+    <!-- Repeat -->
+    <string name="task_editor_field_repeat">Répétition</string>
+    <string name="task_editor_repeat_none">Aucune</string>
+    <string name="task_editor_repeat_daily">Quotidien</string>
+    <string name="task_editor_repeat_weekly">Hebdomadaire</string>
+    <string name="task_editor_repeat_monthly">Mensuel</string>
     <string name="priority_low">Faible</string>
     <string name="priority_medium">Moyenne</string>
     <string name="priority_high">Haute</string>

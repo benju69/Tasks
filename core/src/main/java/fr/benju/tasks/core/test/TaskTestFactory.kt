@@ -1,6 +1,7 @@
 package fr.benju.tasks.core.test
 
 import fr.benju.tasks.domain.model.Priority
+import fr.benju.tasks.domain.model.RepeatInterval
 import fr.benju.tasks.domain.model.Task
 
 object TaskTestFactory {
@@ -12,7 +13,8 @@ object TaskTestFactory {
         priority: Priority = Priority.MEDIUM,
         isCompleted: Boolean = false,
         createdAt: Long = System.currentTimeMillis(),
-        dueDate: Long? = null
+        dueDate: Long? = null,
+        repeatInterval: RepeatInterval = RepeatInterval.NONE
     ): Task {
         return Task(
             id = id,
@@ -21,7 +23,8 @@ object TaskTestFactory {
             priority = priority,
             isCompleted = isCompleted,
             createdAt = createdAt,
-            dueDate = dueDate
+            dueDate = dueDate,
+            repeatInterval = repeatInterval
         )
     }
 

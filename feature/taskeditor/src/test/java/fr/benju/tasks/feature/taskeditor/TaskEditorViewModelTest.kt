@@ -28,7 +28,7 @@ class TaskEditorViewModelTest {
     private val updateTaskUseCase: UpdateTaskUseCase = mockk()
     private val getTaskByIdUseCase: GetTaskByIdUseCase = mockk()
     private val reminderScheduler: ReminderScheduler = mockk {
-        every { schedule(any(), any(), any()) } just Runs
+        every { schedule(any(), any(), any(), any()) } just Runs
         every { cancel(any()) } just Runs
     }
 

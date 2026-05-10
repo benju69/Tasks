@@ -63,7 +63,7 @@ class TaskListViewModel @Inject constructor(
                         reminderScheduler.cancel(taskId)
                     } else {
                         // Task was complete; it just became active — reschedule reminder
-                        reminderScheduler.schedule(taskId, task.title, dueDate)
+                        reminderScheduler.schedule(taskId, task.title, dueDate, task.repeatInterval)
                     }
                 }
             }.onFailure { error ->

@@ -32,7 +32,7 @@ class BootReceiver : BroadcastReceiver() {
                     .first()
                     .filter { it.dueDate != null }
                     .forEach { task ->
-                        reminderScheduler.schedule(task.id, task.title, task.dueDate!!)
+                        reminderScheduler.schedule(task.id, task.title, task.dueDate!!, task.repeatInterval)
                     }
             } finally {
                 pendingResult.finish()

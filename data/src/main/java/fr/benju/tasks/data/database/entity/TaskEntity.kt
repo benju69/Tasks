@@ -13,4 +13,5 @@ data class TaskEntity(
     val isCompleted: Boolean = false,
     val createdAt: Long = System.currentTimeMillis(),
     val dueDate: Long? = null,
+    val repeatInterval: String = "NONE",
 )

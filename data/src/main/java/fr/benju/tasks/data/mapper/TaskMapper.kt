@@ -2,6 +2,7 @@ package fr.benju.tasks.data.mapper
 
 import fr.benju.tasks.data.database.entity.TaskEntity
 import fr.benju.tasks.domain.model.Priority
+import fr.benju.tasks.domain.model.RepeatInterval
 import fr.benju.tasks.domain.model.Task
 import javax.inject.Inject
 
@@ -15,7 +16,9 @@ class TaskMapper @Inject constructor() {
             priority = Priority.valueOf(entity.priority),
             isCompleted = entity.isCompleted,
             createdAt = entity.createdAt,
-            dueDate = entity.dueDate
+            dueDate = entity.dueDate,
+            repeatInterval = runCatching { RepeatInterval.valueOf(entity.repeatInterval) }
+                .getOrDefault(RepeatInterval.NONE)
         )
     }
 
@@ -27,7 +30,8 @@ class TaskMapper @Inject constructor() {
             priority = domain.priority.name,
             isCompleted = domain.isCompleted,
             createdAt = domain.createdAt,
-            dueDate = domain.dueDate
+            dueDate = domain.dueDate,
+            repeatInterval = domain.repeatInterval.name
         )
     }
 }

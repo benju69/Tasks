@@ -33,10 +33,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import fr.benju.tasks.domain.model.RepeatInterval
 import fr.benju.tasks.domain.model.Task
 import fr.benju.tasks.ui.R
 import java.time.Instant
-import java.time.LocalDate
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -124,19 +124,22 @@ fun TaskCard(
                     PriorityChip(priority = task.priority)
 
                     task.dueDate?.let { dueDateMs ->
-                        val localDate = Instant.ofEpochMilli(dueDateMs)
-                            .atZone(ZoneId.systemDefault())
-                            .toLocalDate()
-                        val today = LocalDate.now(ZoneId.systemDefault())
-                        val isOverdue = !task.isCompleted && localDate.isBefore(today)
-                        val formattedDate = localDate.format(
-                            DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT)
-                        )
+                        val zdt = Instant.ofEpochMilli(dueDateMs).atZone(ZoneId.systemDefault())
+                        val isOverdue = !task.isCompleted && Instant.ofEpochMilli(dueDateMs).isBefore(Instant.now())
+                        val datePart = zdt.toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+                        val timePart = zdt.toLocalTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                        val formattedDateTime = "$datePart • $timePart"
+                        val repeatSuffix = when (task.repeatInterval) {
+                            RepeatInterval.DAILY -> " ↺"
+                            RepeatInterval.WEEKLY -> " ↺"
+                            RepeatInterval.MONTHLY -> " ↺"
+                            RepeatInterval.NONE -> ""
+                        }
                         Text(
                             text = stringResource(
                                 if (isOverdue) R.string.due_date_overdue else R.string.due_date_label,
-                                formattedDate
-                            ),
+                                formattedDateTime
+                            ) + repeatSuffix,
                             style = MaterialTheme.typography.labelSmall,
                             color = if (isOverdue) MaterialTheme.colorScheme.error
                             else MaterialTheme.colorScheme.onSurfaceVariant
