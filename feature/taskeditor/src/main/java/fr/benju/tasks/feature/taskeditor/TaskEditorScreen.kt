@@ -50,16 +50,16 @@ fun TaskEditorScreen(
     ) { /* result is informational; scheduling works either way (inexact fallback) */ }
 
     LaunchedEffect(viewState.requestNotificationPermission) {
-        if (viewState.requestNotificationPermission) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.POST_NOTIFICATIONS
-                ) != PackageManager.PERMISSION_GRANTED
-            ) {
-                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-            }
-            viewModel.onNotificationPermissionHandled()
+        if (!viewState.requestNotificationPermission) return@LaunchedEffect
+        // Always consume the flag; the actual launch only happens when needed (API 33+ and not granted).
+        viewModel.onNotificationPermissionHandled()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         }
     }
 
