@@ -16,6 +16,8 @@ data class TaskEditorViewState(
     val repeatInterval: RepeatInterval = RepeatInterval.NONE,
     val showDatePicker: Boolean = false,
     val showTimePicker: Boolean = false,
+    /** Set to true after the user picks a date+time; consumed by the UI to request POST_NOTIFICATIONS. */
+    val requestNotificationPermission: Boolean = false,
     val isSaving: Boolean = false,
     @StringRes val error: Int? = null
 )

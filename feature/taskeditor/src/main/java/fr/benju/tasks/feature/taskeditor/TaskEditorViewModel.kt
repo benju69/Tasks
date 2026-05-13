@@ -18,7 +18,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
-import java.time.ZoneOffset
 import javax.inject.Inject
 
 @HiltViewModel
@@ -112,8 +111,14 @@ class TaskEditorViewModel @Inject constructor(
         _viewState.value = _viewState.value.copy(
             dueDate = dueDate,
             showTimePicker = false,
-            pendingDateEpochDay = null
+            pendingDateEpochDay = null,
+            requestNotificationPermission = true
         )
+    }
+
+    /** Called by the UI once the notification-permission request has been launched. */
+    fun onNotificationPermissionHandled() {
+        _viewState.value = _viewState.value.copy(requestNotificationPermission = false)
     }
 
     /** User dismissed the time picker → use 09:00 AM on the pending date. */

@@ -2,7 +2,12 @@
 
 package fr.benju.tasks.feature.taskeditor
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import android.text.format.DateFormat
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -15,12 +20,12 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.benju.tasks.domain.model.Priority
 import fr.benju.tasks.domain.model.RepeatInterval
 import java.time.Instant
-import java.time.LocalDate
 import java.time.ZoneId
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -37,6 +42,26 @@ fun TaskEditorScreen(
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val currentOnTaskSaved by rememberUpdatedState(onTaskSaved)
     val titleFocusRequester = remember { FocusRequester() }
+    val context = LocalContext.current
+
+    // ── Notification permission ────────────────────────────────────────────
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { /* result is informational; scheduling works either way (inexact fallback) */ }
+
+    LaunchedEffect(viewState.requestNotificationPermission) {
+        if (viewState.requestNotificationPermission) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
+            viewModel.onNotificationPermissionHandled()
+        }
+    }
 
     LaunchedEffect(taskId) {
         if (taskId != null) {
@@ -86,7 +111,6 @@ fun TaskEditorScreen(
 
     // ── Time Picker ─────────────────────────────────────────────────────────
     if (viewState.showTimePicker) {
-        val context = LocalContext.current
         // Derive initial h/m from the existing dueDate if editing, otherwise default 09:00
         val existingZdt = viewState.dueDate?.let {
             Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault())
