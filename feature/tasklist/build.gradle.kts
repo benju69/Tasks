@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "fr.benju.tasks.feature.tasklist"
-    compileSdk = 36
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = 26

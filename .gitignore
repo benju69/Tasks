@@ -64,3 +64,4 @@ lint/tmp/
 *.hprof
 keystore.properties
 .DS_Store
+.kotlin

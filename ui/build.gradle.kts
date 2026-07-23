@@ -8,7 +8,7 @@ plugins {
 
 android {
     namespace = "fr.benju.tasks.ui"
-    compileSdk = 36
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         minSdk = 26

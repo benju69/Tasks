@@ -17,12 +17,12 @@ plugins {
 
 android {
     namespace = "fr.benju.tasks"
-    compileSdk = 36
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
         applicationId = "fr.benju.tasks"
         minSdk = 26
-        targetSdk = 36
+        targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = 2
         versionName = "1.0.1"
 
