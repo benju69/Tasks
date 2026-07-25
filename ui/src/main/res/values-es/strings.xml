@@ -8,5 +8,8 @@
     <string name="priority_medium">Media</string>
     <string name="priority_high">Alta</string>
     <string name="cd_delete_task">Eliminar tarea</string>
+    <!-- Due date display -->
+    <string name="due_date_label">Vence: %1$s</string>
+    <string name="due_date_overdue">Vencida: %1$s</string>
 </resources>
 

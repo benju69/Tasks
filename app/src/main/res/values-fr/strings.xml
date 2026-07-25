@@ -31,5 +31,11 @@
     <!-- Common -->
     <string name="delete">Supprimer</string>
     <string name="edit">Modifier</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Rappels de tâches</string>
+    <string name="notification_channel_description">Vous avertit lorsqu\'une tâche est due</string>
+    <string name="notification_title">Tâche due</string>
+    <string name="notification_text">"%1$s" est due aujourd\'hui</string>
 </resources>
 

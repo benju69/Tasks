@@ -8,5 +8,8 @@
     <string name="priority_medium">Mittel</string>
     <string name="priority_high">Hoch</string>
     <string name="cd_delete_task">Aufgabe löschen</string>
+    <!-- Due date display -->
+    <string name="due_date_label">Fällig: %1$s</string>
+    <string name="due_date_overdue">Überfällig: %1$s</string>
 </resources>
 

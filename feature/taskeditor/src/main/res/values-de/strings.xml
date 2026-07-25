@@ -9,6 +9,17 @@
     <string name="task_editor_field_priority">Priorität</string>
     <string name="task_editor_error_title_required">Titel ist erforderlich</string>
     <string name="task_editor_error_save_failed">Aufgabe konnte nicht gespeichert werden. Bitte erneut versuchen.</string>
+    <!-- Due date -->
+    <string name="task_editor_field_due_date">Fälligkeitsdatum &amp; -uhrzeit</string>
+    <string name="task_editor_due_date_none">Kein Fälligkeitsdatum</string>
+    <string name="task_editor_due_date_clear">Löschen</string>
+    <string name="task_editor_field_time">Uhrzeit wählen</string>
+    <!-- Repeat -->
+    <string name="task_editor_field_repeat">Wiederholen</string>
+    <string name="task_editor_repeat_none">Kein</string>
+    <string name="task_editor_repeat_daily">Täglich</string>
+    <string name="task_editor_repeat_weekly">Wöchentlich</string>
+    <string name="task_editor_repeat_monthly">Monatlich</string>
     <string name="priority_low">Niedrig</string>
     <string name="priority_medium">Mittel</string>
     <string name="priority_high">Hoch</string>

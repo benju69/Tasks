@@ -2,17 +2,34 @@
 
 package fr.benju.tasks.feature.taskeditor
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import android.text.format.DateFormat
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import fr.benju.tasks.domain.model.Priority
+import fr.benju.tasks.domain.model.RepeatInterval
+import java.time.Instant
+import java.time.ZoneId
+import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 fun TaskEditorScreen(
@@ -25,6 +42,26 @@ fun TaskEditorScreen(
     val viewState by viewModel.viewState.collectAsStateWithLifecycle()
     val currentOnTaskSaved by rememberUpdatedState(onTaskSaved)
     val titleFocusRequester = remember { FocusRequester() }
+    val context = LocalContext.current
+
+    // ── Notification permission ────────────────────────────────────────────
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { /* result is informational; scheduling works either way (inexact fallback) */ }
+
+    LaunchedEffect(viewState.requestNotificationPermission) {
+        if (!viewState.requestNotificationPermission) return@LaunchedEffect
+        // Always consume the flag; the actual launch only happens when needed (API 33+ and not granted).
+        viewModel.onNotificationPermissionHandled()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            ContextCompat.checkSelfPermission(
+                context,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 
     LaunchedEffect(taskId) {
         if (taskId != null) {
@@ -41,6 +78,69 @@ fun TaskEditorScreen(
         viewModel.saveSuccess.collect {
             currentOnTaskSaved()
         }
+    }
+
+    // ── Date Picker ────────────────────────────────────────────────────────
+    if (viewState.showDatePicker) {
+        // Convert existing local dueDate to UTC date-only ms for the picker (avoids ±1 day shift)
+        val initialDateMs = viewState.dueDate?.let { localMs ->
+            Instant.ofEpochMilli(localMs)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+                .atStartOfDay(ZoneOffset.UTC)
+                .toInstant()
+                .toEpochMilli()
+        }
+        val datePickerState = rememberDatePickerState(initialSelectedDateMillis = initialDateMs)
+        DatePickerDialog(
+            onDismissRequest = { viewModel.hideDatePicker() },
+            confirmButton = {
+                TextButton(onClick = { viewModel.onDateSelected(datePickerState.selectedDateMillis) }) {
+                    Text(stringResource(R.string.task_editor_save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.hideDatePicker() }) {
+                    Text(stringResource(R.string.task_editor_cancel))
+                }
+            }
+        ) {
+            DatePicker(state = datePickerState)
+        }
+    }
+
+    // ── Time Picker ─────────────────────────────────────────────────────────
+    if (viewState.showTimePicker) {
+        // Derive initial h/m from the existing dueDate if editing, otherwise default 09:00
+        val existingZdt = viewState.dueDate?.let {
+            Instant.ofEpochMilli(it).atZone(ZoneId.systemDefault())
+        }
+        val timePickerState = rememberTimePickerState(
+            initialHour = existingZdt?.hour ?: TaskEditorViewModel.DEFAULT_HOUR,
+            initialMinute = existingZdt?.minute ?: TaskEditorViewModel.DEFAULT_MINUTE,
+            is24Hour = DateFormat.is24HourFormat(context)
+        )
+        AlertDialog(
+            onDismissRequest = { viewModel.onTimePickerDismissed() },
+            title = { Text(stringResource(R.string.task_editor_field_time)) },
+            text = {
+                Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxWidth()) {
+                    TimePicker(state = timePickerState)
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    viewModel.onTimeSelected(timePickerState.hour, timePickerState.minute)
+                }) {
+                    Text(stringResource(R.string.task_editor_save))
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { viewModel.onTimePickerDismissed() }) {
+                    Text(stringResource(R.string.task_editor_cancel))
+                }
+            }
+        )
     }
 
     Scaffold(
@@ -72,7 +172,8 @@ fun TaskEditorScreen(
             modifier = modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(16.dp),
+                .padding(16.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             OutlinedTextField(
@@ -94,6 +195,7 @@ fun TaskEditorScreen(
                 maxLines = 5
             )
 
+            // ── Priority ──────────────────────────────────────────────────
             Text(stringResource(R.string.task_editor_field_priority), style = MaterialTheme.typography.titleMedium)
 
             Row(
@@ -116,6 +218,56 @@ fun TaskEditorScreen(
                 }
             }
 
+            // ── Due date & time ───────────────────────────────────────────
+            Text(stringResource(R.string.task_editor_field_due_date), style = MaterialTheme.typography.titleMedium)
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                OutlinedButton(
+                    onClick = { viewModel.showDatePicker() },
+                    modifier = Modifier.weight(1f)
+                ) {
+                    val label = viewState.dueDate?.let { formatDueDateTime(it) }
+                        ?: stringResource(R.string.task_editor_due_date_none)
+                    Text(label)
+                }
+                if (viewState.dueDate != null) {
+                    TextButton(onClick = { viewModel.clearDueDate() }) {
+                        Text(stringResource(R.string.task_editor_due_date_clear))
+                    }
+                }
+            }
+
+            // ── Repeat ────────────────────────────────────────────────────
+            if (viewState.dueDate != null) {
+                Text(stringResource(R.string.task_editor_field_repeat), style = MaterialTheme.typography.titleMedium)
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    RepeatInterval.entries.forEach { interval ->
+                        FilterChip(
+                            selected = viewState.repeatInterval == interval,
+                            onClick = { viewModel.updateRepeatInterval(interval) },
+                            label = {
+                                Text(
+                                    when (interval) {
+                                        RepeatInterval.NONE -> stringResource(R.string.task_editor_repeat_none)
+                                        RepeatInterval.DAILY -> stringResource(R.string.task_editor_repeat_daily)
+                                        RepeatInterval.WEEKLY -> stringResource(R.string.task_editor_repeat_weekly)
+                                        RepeatInterval.MONTHLY -> stringResource(R.string.task_editor_repeat_monthly)
+                                    }
+                                )
+                            }
+                        )
+                    }
+                }
+            }
+
             viewState.error?.let { errorRes ->
                 Text(
                     text = stringResource(errorRes),
@@ -129,4 +281,11 @@ fun TaskEditorScreen(
             }
         }
     }
+}
+
+private fun formatDueDateTime(epochMs: Long): String {
+    val zdt = Instant.ofEpochMilli(epochMs).atZone(ZoneId.systemDefault())
+    val datePart = zdt.toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
+    val timePart = zdt.toLocalTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+    return "$datePart • $timePart"
 }

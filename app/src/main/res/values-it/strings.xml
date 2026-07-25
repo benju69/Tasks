@@ -31,5 +31,11 @@
     <!-- Common -->
     <string name="delete">Elimina</string>
     <string name="edit">Modifica</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Promemoria attività</string>
+    <string name="notification_channel_description">Ti avvisa quando un\'attività è in scadenza</string>
+    <string name="notification_title">Attività in scadenza</string>
+    <string name="notification_text">"%1$s" scade oggi</string>
 </resources>
 

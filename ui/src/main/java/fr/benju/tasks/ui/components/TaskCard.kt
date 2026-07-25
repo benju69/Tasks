@@ -33,8 +33,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import fr.benju.tasks.domain.model.RepeatInterval
 import fr.benju.tasks.domain.model.Task
 import fr.benju.tasks.ui.R
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.FormatStyle
 
 @Composable
 fun TaskCard(
@@ -112,7 +117,30 @@ fun TaskCard(
 
                 Spacer(modifier = Modifier.height(4.dp))
 
-                PriorityChip(priority = task.priority)
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    PriorityChip(priority = task.priority)
+
+                    task.dueDate?.let { dueDateMs ->
+                        val zdt = Instant.ofEpochMilli(dueDateMs).atZone(ZoneId.systemDefault())
+                        val isOverdue = !task.isCompleted && Instant.ofEpochMilli(dueDateMs).isBefore(Instant.now())
+                        val datePart = zdt.toLocalDate().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.SHORT))
+                        val timePart = zdt.toLocalTime().format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
+                        val formattedDateTime = "$datePart • $timePart"
+                        val repeatSuffix = if (task.repeatInterval != RepeatInterval.NONE) " ↺" else ""
+                        Text(
+                            text = stringResource(
+                                if (isOverdue) R.string.due_date_overdue else R.string.due_date_label,
+                                formattedDateTime
+                            ) + repeatSuffix,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = if (isOverdue) MaterialTheme.colorScheme.error
+                            else MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
             }
 
             if (onDeleteTask != null) {

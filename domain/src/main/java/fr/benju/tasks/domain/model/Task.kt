@@ -7,4 +7,6 @@ data class Task(
     val priority: Priority,
     val isCompleted: Boolean = false,
     val createdAt: Long = System.currentTimeMillis(),
+    val dueDate: Long? = null,
+    val repeatInterval: RepeatInterval = RepeatInterval.NONE,
 )

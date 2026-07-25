@@ -8,5 +8,8 @@
     <string name="priority_medium">Media</string>
     <string name="priority_high">Alta</string>
     <string name="cd_delete_task">Elimina attività</string>
+    <!-- Due date display -->
+    <string name="due_date_label">Scade: %1$s</string>
+    <string name="due_date_overdue">Scaduta: %1$s</string>
 </resources>
 

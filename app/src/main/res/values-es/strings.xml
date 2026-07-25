@@ -31,5 +31,11 @@
     <!-- Common -->
     <string name="delete">Eliminar</string>
     <string name="edit">Editar</string>
+
+    <!-- Notifications -->
+    <string name="notification_channel_name">Recordatorios de tareas</string>
+    <string name="notification_channel_description">Te avisa cuando una tarea está pendiente</string>
+    <string name="notification_title">Tarea pendiente</string>
+    <string name="notification_text">"%1$s" vence hoy</string>
 </resources>
 
